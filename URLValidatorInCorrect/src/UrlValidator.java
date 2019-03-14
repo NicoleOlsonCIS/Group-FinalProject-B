@@ -297,47 +297,60 @@ public class UrlValidator implements Serializable {
      * value is considered invalid.
      * @return true if the url is valid.
      */
-    public boolean isValid(String value) {
-        if (value == null) {
+    public boolean isValid(String value) 
+    {
+        if (value == null) 
+        {
             return false;
         }
 
         // Check the whole url address structure
         Matcher urlMatcher = URL_PATTERN.matcher(value);
-        if (!urlMatcher.matches()) {
+        if (!urlMatcher.matches()) 
+        {
             return false;
         }
 
         String scheme = urlMatcher.group(PARSE_URL_SCHEME);
-        if (!isValidScheme(scheme)) {
+        if (!isValidScheme(scheme))
+        {
             return false;
         }
 
         String authority = urlMatcher.group(PARSE_URL_AUTHORITY);
 
-        if ("http".equals(scheme)) {// Special case - file: allows an empty authority
-            if (authority != null) {
-                if (authority.contains(":")) { // but cannot allow trailing :
+        if ("http".equals(scheme)) 
+        {// Special case - file: allows an empty authority
+            if (authority != null) 
+            {
+                if (authority.contains(":"))
+                { // but cannot allow trailing :
                     return false;
                 }
             }
             // drop through to continue validation
-        } else { // not file:
+        } 
+        else 
+        { // not file:
             // Validate the authority
-            if (!isValidAuthority(authority)) {
+            if (!isValidAuthority(authority))
+            {
                 return false;
             }
         }
 
-        if (!isValidPath(urlMatcher.group(PARSE_URL_PATH))) {
+        if (!isValidPath(urlMatcher.group(PARSE_URL_PATH)))
+        {
             return false;
         }
 
-        if (!isValidQuery(urlMatcher.group(PARSE_URL_QUERY))) {
+        if (!isValidQuery(urlMatcher.group(PARSE_URL_QUERY)))
+        {
             return false;
         }
 
-        if (!isValidFragment(urlMatcher.group(PARSE_URL_FRAGMENT))) {
+        if (!isValidFragment(urlMatcher.group(PARSE_URL_FRAGMENT)))
+        {
             return false;
         }
 
