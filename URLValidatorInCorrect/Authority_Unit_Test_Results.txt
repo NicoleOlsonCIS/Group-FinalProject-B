@@ -1,0 +1,82 @@
+Printing test outcomes for IsValid() Calls Testing Authority
+
+
+1: TESTING: http://www.google.com
+Expecting: true, isValid() Return: true
+Summary: FAIL
+2: CRASHED o url:ftp://www.google.com
+
+3: CRASHED o url:h3t://www.google.com
+
+4: TESTING: http://amazon.com.au
+Expecting: true, isValid() Return: true
+Summary: FAIL
+5: TESTING: http://0.0.0.0
+Expecting: true, isValid() Return: true
+Summary: FAIL
+6: TESTING: http://255.255.255.255
+Expecting: true, isValid() Return: true
+Summary: FAIL
+7: TESTING: http://172.com
+Expecting: true, isValid() Return: true
+Summary: FAIL
+8: TESTING: http://youtube.cc
+Expecting: true, isValid() Return: true
+Summary: FAIL
+9: TESTING: http://user:password@host:81
+Expecting: true, isValid() Return: false
+Summary: FAIL
+10: TESTING: http://255.255.255.255:81
+Expecting: true, isValid() Return: false
+Summary: FAIL
+11: TESTING: http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+12: TESTING: http://[1080:0:0:0:8:800:200C:417A]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+13: TESTING: http://[3ffe:2a00:100:7031::1]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+14: TESTING: http://[1080::8:800:200C:417A]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+15: TESTING: http://[::192.9.5.5]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+16: TESTING: http://[::FFFF:129.144.52.38]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+17: TESTING: http://[2010:836B:4179::836B:4179]
+Expecting: false, isValid() Return: false
+Summary: FAIL
+18: TESTING: http://172.192.172.256
+Expecting: false, isValid() Return: true
+Summary: FAIL
+19: TESTING: http://10.11.12.13.14
+Expecting: false, isValid() Return: true
+Summary: FAIL
+20: TESTING: http://1.1.1.1.
+Expecting: false, isValid() Return: true
+Summary: FAIL
+21: TESTING: http://1.2.3
+Expecting: false, isValid() Return: true
+Summary: FAIL
+22: TESTING: http://.1.2.3.4
+Expecting: false, isValid() Return: true
+Summary: FAIL
+23: TESTING: http://go.a
+Expecting: false, isValid() Return: true
+Summary: FAIL
+24: TESTING: http://go.1aa
+Expecting: false, isValid() Return: true
+Summary: FAIL
+25: TESTING: http://.aaa
+Expecting: false, isValid() Return: true
+Summary: FAIL
+26: TESTING: http://aaa.
+Expecting: false, isValid() Return: true
+Summary: FAIL
+27: TESTING: http://aaa
+Expecting: false, isValid() Return: true
+Summary: FAIL

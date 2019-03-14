@@ -100,7 +100,7 @@ public class UrlValidatorTest extends TestCase
        teststruct TestArr2[] = new teststruct[18]; 
        
 	   System.out.println();
-	   System.out.println("UNIT TEST: Testing isValidScheme() on provided schemes");
+	   System.out.println("UNIT TEST: Testing isValidScheme() on provided schemes\n");
 	   
 	   // TEST 1: DEFAULT SCHEMES
 	   String[] DEFAULT_SCHEMES = {"http", "https", "ftp"}; 
@@ -112,35 +112,35 @@ public class UrlValidatorTest extends TestCase
 	   boolean ftpError = false;
 	   
 	   
-	   System.out.println("Testing initialization of allowable schemes: http, https, ftp\n");
-	   System.out.println("Call to isValidScheme() directly (not inValid())\n\n");
+	   System.out.println("\tTesting initialization of allowable schemes: http, https, ftp\n");
+	   System.out.println("\tCall to isValidScheme() directly (not inValid())\n");
 	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal.isValidScheme("http"))
 	   {
-		   System.out.print("http: FAIL\n");
+		   System.out.print("\t\thttp: FAIL\n");
 		   httpError = true;
 	   }
 	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal.isValidScheme("https"))
 	   {
-		   System.out.print("https: FAIL\n");
+		   System.out.print("\t\thttps: FAIL\n");
 		   httpsError = true;
 	   }
 		  
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal.isValidScheme("https"))
 	   {
-		   System.out.print("ftp: FAIL\n");
+		   System.out.print("\t\tftp: FAIL\n");
 		   ftpError = true;
 	   }
 		  
 	   if(!(httpError || httpsError || ftpError))
 	   {
 		   System.out.println();
-		   System.out.println("Cross references of scheme validity in context:");
-		   System.out.println("Testing above scheme validity in context of isValid() call: \n\n");
+		   System.out.println("\tCross references of scheme validity in context:");
+		   System.out.println("\tTesting above scheme validity in context of isValid() call: \n\n");
 		   test1Run = true;
 		   boolean preliminary;
 		   setting1 = "Only: http/https/ftp"; 
@@ -151,7 +151,7 @@ public class UrlValidatorTest extends TestCase
 		   }
 		   catch (Exception e)
 		   {
-			   System.out.println("CRASHED on preliminary test case: http://www.google.com");
+			   System.out.println("\t\tCRASHED on preliminary test case: http://www.google.com");
 			   return; 
 		   }
 		   
@@ -210,12 +210,14 @@ public class UrlValidatorTest extends TestCase
 
 		   }
 		   
-		   teststruct.printResults(TestArr);
-		   
+		
+		   System.out.println("\tSee full results in 'Scheme_Unit_Test1.txt''\n\n");
+		   teststruct.printResultsToFile(TestArr, "Scheme_Unit_Test1.txt", "SchemeTest1");
+
 	   }
 	   else
 	   {
-		   System.out.print("SUMMARY 'allowable scheme' initialization produces fatal error ");
+		   System.out.print("\tSUMMARY 'allowable scheme' initialization produces fatal error ");
 		   if(httpError && httpsError && ftpError)
 			   System.out.println("TYPE: all schemes evaluate to invalid\n\n");
 		   else
@@ -240,27 +242,27 @@ public class UrlValidatorTest extends TestCase
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal2.isValidScheme("http"))
 	   {
-		   System.out.print("http: FAIL;");
+		   System.out.print("\t\thttp: FAIL;");
 		   httpErrorB = true;
 	   }
 	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal2.isValidScheme("https"))
 	   {
-		   System.out.print("https: FAIL \n");
+		   System.out.print("\t\thttps: FAIL \n");
 		   httpsErrorB = true;
 	   }
 		  
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal2.isValidScheme("ftp"))
 	   {
-		   System.out.print("ftp: FAIL \n");
+		   System.out.print("\t\tftp: FAIL \n");
 		   ftpErrorB = true;
 	   }
 		  
 	   if(!urlVal2.isValidScheme("Xttp"))
 	   {
-		   System.out.print("Xttp: FAIL \n");
+		   System.out.print("\t\tXttp: FAIL \n");
 		   XttpError = true;
 	   }
 	   
@@ -276,7 +278,7 @@ public class UrlValidatorTest extends TestCase
 	   {
 		   if(urlVal2.isValidScheme(fArr[k]))
 		   {
-			   System.out.print(fArr[k] + "FAIL \n");
+			   System.out.print("		" + fArr[k] + "FAIL \n");
 			   fError = true;
 		   }
 	   }
@@ -285,8 +287,8 @@ public class UrlValidatorTest extends TestCase
 	   if(!(httpErrorB || httpsErrorB || ftpErrorB || XttpError || fError))
 	   {
 		   System.out.println();
-		   System.out.println("Cross references of scheme validity in context:");
-		   System.out.println("Testing ALLOW_ALL_SCHEME validity in context of isValid() call: \n\n");
+		   System.out.println("\tCross references of scheme validity in context:");
+		   System.out.println("\tTesting ALLOW_ALL_SCHEME validity in context of isValid() call: \n\n");
 		   test2Run = true;
 		   try 
 		   {
@@ -294,7 +296,7 @@ public class UrlValidatorTest extends TestCase
 		   }
 		   catch (Exception e)
 		   {
-			   System.out.println("CRASHED on preliminary test case: http://www.google.com");
+			   System.out.println("\t\tCRASHED on preliminary test case: http://www.google.com");
 			   return; 
 		   }
 		   
@@ -368,12 +370,14 @@ public class UrlValidatorTest extends TestCase
 
 		   }
 		   
-		   teststruct.printResults(TestArr2);
+		   //teststruct.printResults(TestArr2);
+		   System.out.println("\tSee full results in 'Scheme_Unit_Test2.txt'");
+		   teststruct.printResultsToFile(TestArr2, "Scheme_Unit_Test2.txt", "SchemeTest2");
 		   
 	   }
 	   else
 	   {
-		   System.out.print("Error upon initialization of ALLOW_ALL_SCHEMES ");
+		   System.out.print("\t\tError upon initialization of ALLOW_ALL_SCHEMES ");
 		   if(httpErrorB && httpsErrorB && ftpErrorB && XttpError && fError)
 			   System.out.println("TYPE: invalid scheme evaluation in all scheme input types\n\n");
 		   else
@@ -384,8 +388,10 @@ public class UrlValidatorTest extends TestCase
 	   // if we ran both full tests, we can compare the results
 	   if(test1Run && test2Run)
 	   {
+		   System.out.println("Comparison of Scheme options test results in output 'CompareSchemeSettingsTest.txt'\n\n");
 		   // NOW COMPARE THE TWO TESTS STRUCT ARRAY RESULTS 
-		   teststruct.compareTestStructArrays(TestArr, TestArr2, setting1, setting2);
+		   //teststruct.compareTestStructArrays(TestArr, TestArr2, setting1, setting2);
+		   teststruct.printCompareTestStructArraysToFile(TestArr, TestArr2, setting1, setting2, "CompareSchemeSettingsTest.txt", "Compare Scheme Settings Test");
 	   }
 	 
 	   
@@ -421,7 +427,6 @@ public class UrlValidatorTest extends TestCase
 	   // 
 	   // An optional port subcomponent preceded by a colon (:).
 
-	   System.out.println();
 	   System.out.println("UNIT TEST: Testing isValidAuthority() directly (not calling isValid() )"); 
 	   
 	   // TEST 1: TESTING DEFAULT SETTINGS - IPV6 inputs expected to be INVALID on default settings
@@ -468,23 +473,23 @@ public class UrlValidatorTest extends TestCase
 	   // call isValidAuthority with "null"
 	   // call !isValidAuthority(authority) on valid authorities:
 	   System.out.println();
-	   System.out.println("Testing isValidAuthority called with authority = null: \n");
+	   System.out.println("\tTesting isValidAuthority called with authority = null: \n");
 	   try
 	   {
 		   result = urlValAuth.isValidAuthority(null);
 		   if(result)
-			   System.out.println("     Null input returned valid\n");
+			   System.out.println("\t\tNull input returned valid\n\n");
 		   else
-			   System.out.println("     Null input returned invalid\n");
+			   System.out.println("\t\tNull input returned invalid\n\n");
 	   }
 	   catch(Throwable t)
 	   {
-		   System.out.println("CATCH: null input returned invalid\n");
+		   System.out.println("\t\tCATCH: null input returned invalid\n\n");
 	   }
 	  
 	   
 	   // call !isValidAuthority(authority) on valid authorities:
-	   System.out.println("Testing isValidAuthority on valid authority strings (failures printed): \n");
+	   System.out.println("\tTesting isValidAuthority on valid authority strings (failures printed): \n\n");
 	   int count1 = 0;
 	   int count2 = 0;
 	   
@@ -494,17 +499,17 @@ public class UrlValidatorTest extends TestCase
 		   {
 			   result = urlValAuth.isValidAuthority(tArr[i]);
 			   if(!result)
-				   System.out.println(tArr[i] + " FAIL");
+				   System.out.println("\t\t" +tArr[i] + " FAIL");
 		   }
 		   catch(Throwable t)
 		   {
-			   System.out.println("     Throwable error with " + tArr[i] + " calling isValidAuthority() \n");
+			   System.out.println("\t\tThrowable error with " + tArr[i] + " calling isValidAuthority() \n");
 			   count1++;
 		   }
 	   }
 	   
 	   System.out.println();
-	   System.out.println("Testing isValidAuthority on invalid authority strings (failures printed): \n");
+	   System.out.println("\tTesting isValidAuthority on invalid authority strings (failures printed): \n");
 	   // call !isValidAuthority(authority) on invalid authorities
 	   for(int i = 0; i < fArr.length; i++)
 	   {
@@ -512,41 +517,41 @@ public class UrlValidatorTest extends TestCase
 		   {
 			   result = urlValAuth.isValidAuthority(fArr[i]);
 			   if(result)
-				   System.out.println(fArr[i] + " FAIL");
+				   System.out.println("\t\t" + fArr[i] + " FAIL");
 		   }
 		   catch(Throwable t)
 		   {
-			   System.out.println("     Throwable error with " + fArr[i] + " calling isValidAuthority() \n");
+			   System.out.println("\t\tThrowable error with " + fArr[i] + " calling isValidAuthority() \n");
 			   count2++;
 		   }
 	   }
 	   
 	   if(count1 == tArr.length && count2 == fArr.length)
-		   System.out.print("IMPORTANT FINDING: Unamimous outcome - all calls (valid and invalid) to isValidAuthority have thrown error\n\n");
+		   System.out.print("\tIMPORTANT FINDING: Unamimous outcome - all calls (valid and invalid) to isValidAuthority have thrown error\n\n");
 	   
 	   if(count1 == tArr.length && !(count2 == fArr.length))
-		   System.out.print("IMPORTANT FINDING: ALL CALLS TO isValidAuthority with VALID authorities have thown error.\n\n");
+		   System.out.print("\tIMPORTANT FINDING: ALL CALLS TO isValidAuthority with VALID authorities have thown error.\n\n");
 	   if(!(count2 == fArr.length) && count2 == fArr.length)
-		   System.out.print("IMPORTANT FINDING: ALL CALLS TO isValidAuthority with INVALID authorities have thown error.\n\n");
+		   System.out.print("\tIMPORTANT FINDING: ALL CALLS TO isValidAuthority with INVALID authorities have thown error.\n\n");
 	   
 	   
 	   // Attempt to test IPV4 and IPV6 addresses directly
 	   
 	   System.out.println();
-	   System.out.println("Attempting to create InetAddressValidator.getInstance(): \n");
+	   System.out.println("\tAttempting to create InetAddressValidator.getInstance(): \n");
 	   try
 	   {
 		   InetAddressValidator iNet = InetAddressValidator.getInstance();
 		   System.out.println();
-		   System.out.println("testing isValidInet6Address: \n");
+		   System.out.println("\t\ttesting isValidInet6Address: \n");
 		   result = iNet.isValidInet6Address("[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]");
 		   if(!result)
-			   System.out.println("		FAIL: failure to correctly evaluate ipv6\n");
+			   System.out.println("\t\tFAIL: failure to correctly evaluate ipv6\n");
 	   }
 	   catch(Throwable t)
 	   {
-		   System.out.println("FAIL: Error in InetAddressValidator.getInstance()");
-		   System.out.println("		Unable to evaluate ANY ipv4 or ipv6 due to above error \n");
+		   System.out.println("\t\tFAIL: Error in InetAddressValidator.getInstance()");
+		   System.out.println("\t\tUnable to evaluate ANY ipv4 or ipv6 due to above error \n");
 	   }
      
 	   // PART 2: TESTING AUTHORITIES IN CONTEXT
@@ -562,13 +567,13 @@ public class UrlValidatorTest extends TestCase
 				   new ResultPair("http://" + "youtube.cc", true), 	     							// TEST .cc
 				   new ResultPair("http://" + "user:password@host:81", true),						// TEST username/password/port format 
 				   new ResultPair("http://" + "255.255.255.255:81", true),	 						// TEST port option on host
-				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]", true), 	// FALSE: IPV6 
-				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]", true),            	// FALSE: IPV6
-				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]", true),         			// FALSE: IPV6 
-				   new ResultPair("http://" + "[1080::8:800:200C:417A]", true),            	        // FALSE: IPV6
-				   new ResultPair("http://" + "[::192.9.5.5]", true),            				    // FALSE: IPV6
-				   new ResultPair("http://" + "[::FFFF:129.144.52.38]", true),                      // FALSE: IPV6
-				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]", true),                 // FALSE: IPV6 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
+				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]", true), 	// TEST: Valid IPV6 Type1 
+				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]", true),            	// TEST: Valid IPV6 Type2
+				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]", true),         			// TEST: Valid IPV6 Type3
+				   new ResultPair("http://" + "[1080::8:800:200C:417A]", true),            	        // TEST: Valid IPV6 Type4
+				   new ResultPair("http://" + "[::192.9.5.5]", true),            				    // TEST: Valid IPV6 Type5
+				   new ResultPair("http://" + "[::FFFF:129.144.52.38]", true),                      // TEST: Valid IPV6 Type6
+				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]", true),                 // TEST: Valid IPV6 Type7 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
 				   new ResultPair("http://" + "172.192.172.256", false), 							// FALSE invalid IPV4 	
 				   new ResultPair("http://" + "10.11.12.13.14", false),      						// FALSE invalid IPV4
 				   new ResultPair("http://" + "1.1.1.1.", false),       							// FALSE invalid IPV4 format (trailing dot)
@@ -615,8 +620,9 @@ public class UrlValidatorTest extends TestCase
 
 	   }
 	   
-	   System.out.println("PART 2: Testing authority strings with full 'isValid()' call: \n\n");
-	   teststruct.printResults(TestArr);
+	   System.out.println("\tSee Full Unit Test Report in output 'Authority_Unit_Test_Results.txt' \n\n");
+	   //teststruct.printResults(TestArr);
+	   teststruct.printResultsToFile(TestArr, "Authority_Unit_Test_Results.txt", "IsValid() Calls Testing Authority");
    }
    
    // NOTE: ALL WILL FAIL DUE TO isValidAuthoirty bug, but these tests relevant when that bug resolved
@@ -637,7 +643,7 @@ public class UrlValidatorTest extends TestCase
 	   }
 	   catch (Exception e)
 	   {
-		   System.out.println("CRASHED on preliminary test case: http://www.google.com\n\n");
+		   System.out.println("\tCRASHED on preliminary test case: http://www.google.com\n\n");
 		   return; 
 	   }
 	   
@@ -684,7 +690,7 @@ public class UrlValidatorTest extends TestCase
 	   String resultArr[] = new String[2000];
 	   
 	   System.out.println();
-	   System.out.println("Testing random valid ports in isValidAuthority() call: \n");
+	   System.out.println("\tTesting random valid ports in isValidAuthority() call: \n");
 	   
 	   for(int j = 0; j < 2000; j++)
 	   {
@@ -723,10 +729,10 @@ public class UrlValidatorTest extends TestCase
 	   
 	   // print summary from random valid port call to isValidAuthoirty
 	   System.out.println();
-	   System.out.println("Summary of results for random valid ports called to isValidAuthoirty(): \n");
-	   System.out.println("# return TRUE (PASS): " + numTrue + "\n\n");
-	   System.out.println("# return FALSE (FAIL): " + numFalse + "\n\n");
-	   System.out.println("# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+	   System.out.println("\tSummary of results for random valid ports called to isValidAuthoirty(): \n");
+	   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
+	   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
 	   
 	   
 	   // REPEAT WITH INVALID PORTS
@@ -745,7 +751,7 @@ public class UrlValidatorTest extends TestCase
 	   String resultArr2[] = new String[2000];
 	   
 	   System.out.println();
-	   System.out.println("Testing random valid ports in isValidAuthority() call: \n");
+	   System.out.println("\tTesting random invalid ports in isValidAuthority() call: \n");
 	   
 	   for(int j = 0; j < 2000; j++)
 	   {
@@ -784,10 +790,10 @@ public class UrlValidatorTest extends TestCase
 	   
 	   // print summary from random valid port call to isValidAuthoirty
 	   System.out.println();
-	   System.out.println("Summary of results for random INVALID ports called to isValidAuthoirty(): \n");
-	   System.out.println("# return TRUE (PASS): " + numTrue + "\n\n");
-	   System.out.println("# return FALSE (FAIL): " + numFalse + "\n\n");
-	   System.out.println("# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+	   System.out.println("\tSummary of results for random INVALID ports called to isValidAuthoirty(): \n");
+	   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
+	   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
 	   
 	   // NOW CALL isValid() with the same ports (starting with valid ports)
 	   for (int j = 0; j < 2000; j++)
@@ -835,7 +841,11 @@ public class UrlValidatorTest extends TestCase
 	   String s1 = "valid port";
 	   String s2 = "invalid port";
 	   
-	   teststruct.compareTestStructArrays(TestArr, TestArr2, s1, s2);
+	   // Prints all 2000 results compared
+	   System.out.println("\tSee output file 'Random_Testing_Ports_Comparative.txt' for ");
+	   System.out.println("\tcomparative analysis between valid and invalid port calls\n");
+	   String testName = "Comparing Valid and InValid Port Test Results";
+	   teststruct.printCompareTestStructArraysToFile(TestArr, TestArr2, s1, s2, "Random_Testing_Ports_Comparative.txt", testName);
 	   
 	   
    }
