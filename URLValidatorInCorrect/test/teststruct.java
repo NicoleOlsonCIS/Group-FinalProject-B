@@ -203,5 +203,9 @@ public class teststruct
 		
 	}
 	
+	public static void printResultsToFile(teststruct arr[]) 
+	{
+		
+	}
 	
 }

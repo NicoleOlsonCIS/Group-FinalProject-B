@@ -1,6 +1,7 @@
 
 
 import junit.framework.TestCase;
+import java.util.concurrent.ThreadLocalRandom;
 
 //You can use this as a skeleton for your 3 different test approach
 //It is an optional to use this file, you can generate your own test file(s) to test the target function!
@@ -438,7 +439,14 @@ public class UrlValidatorTest extends TestCase
 				   "172.com",
 				   "youtube.cc",
 				   "user:password@host:81", 
-				   "255.255.255.255:81"
+				   "255.255.255.255:81",
+				   "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]",
+				   "[1080:0:0:0:8:800:200C:417A]",
+				   "[3ffe:2a00:100:7031::1]",
+				   "[1080::8:800:200C:417A]",
+				   "[::192.9.5.5]",
+				   "[::FFFF:129.144.52.38]",
+				   "[2010:836B:4179::836B:4179]"
 		   };
 	   String fArr[] = 
 		   {
@@ -451,18 +459,30 @@ public class UrlValidatorTest extends TestCase
 				   "go.1aa", 
 				   ".aaa",
 				   "aaa.", 
-				   "aaa",
-				   "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]",
-				   "[1080:0:0:0:8:800:200C:417A]",
-				   "[3ffe:2a00:100:7031::1]",
-				   "[1080::8:800:200C:417A]",
-				   "[::192.9.5.5]",
-				   "[::FFFF:129.144.52.38]",
-				   "[2010:836B:4179::836B:4179]"
+				   "aaa"
 		   };
 	   
 	   
 	   boolean result;
+	   
+	   // call isValidAuthority with "null"
+	   // call !isValidAuthority(authority) on valid authorities:
+	   System.out.println();
+	   System.out.println("Testing isValidAuthority called with authority = null: \n");
+	   try
+	   {
+		   result = urlValAuth.isValidAuthority(null);
+		   if(result)
+			   System.out.println("     Null input returned valid\n");
+		   else
+			   System.out.println("     Null input returned invalid\n");
+	   }
+	   catch(Throwable t)
+	   {
+		   System.out.println("CATCH: null input returned invalid\n");
+	   }
+	  
+	   
 	   // call !isValidAuthority(authority) on valid authorities:
 	   System.out.println("Testing isValidAuthority on valid authority strings (failures printed): \n");
 	   int count1 = 0;
@@ -478,7 +498,7 @@ public class UrlValidatorTest extends TestCase
 		   }
 		   catch(Throwable t)
 		   {
-			   System.out.println("Throwable error with " + tArr[i] + " calling isValidAuthority() \n");
+			   System.out.println("     Throwable error with " + tArr[i] + " calling isValidAuthority() \n");
 			   count1++;
 		   }
 	   }
@@ -491,16 +511,15 @@ public class UrlValidatorTest extends TestCase
 		   try
 		   {
 			   result = urlValAuth.isValidAuthority(fArr[i]);
-			   if(!result)
+			   if(result)
 				   System.out.println(fArr[i] + " FAIL");
 		   }
 		   catch(Throwable t)
 		   {
-			   System.out.println("Throwable error with " + fArr[i] + " calling isValidAuthority() \n");
+			   System.out.println("     Throwable error with " + fArr[i] + " calling isValidAuthority() \n");
 			   count2++;
 		   }
 	   }
-	   
 	   
 	   if(count1 == tArr.length && count2 == fArr.length)
 		   System.out.print("IMPORTANT FINDING: Unamimous outcome - all calls (valid and invalid) to isValidAuthority have thrown error\n\n");
@@ -510,6 +529,26 @@ public class UrlValidatorTest extends TestCase
 	   if(!(count2 == fArr.length) && count2 == fArr.length)
 		   System.out.print("IMPORTANT FINDING: ALL CALLS TO isValidAuthority with INVALID authorities have thown error.\n\n");
 	   
+	   
+	   // Attempt to test IPV4 and IPV6 addresses directly
+	   
+	   System.out.println();
+	   System.out.println("Attempting to create InetAddressValidator.getInstance(): \n");
+	   try
+	   {
+		   InetAddressValidator iNet = InetAddressValidator.getInstance();
+		   System.out.println();
+		   System.out.println("testing isValidInet6Address: \n");
+		   result = iNet.isValidInet6Address("[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]");
+		   if(!result)
+			   System.out.println("		FAIL: failure to correctly evaluate ipv6\n");
+	   }
+	   catch(Throwable t)
+	   {
+		   System.out.println("FAIL: Error in InetAddressValidator.getInstance()");
+		   System.out.println("		Unable to evaluate ANY ipv4 or ipv6 due to above error \n");
+	   }
+     
 	   // PART 2: TESTING AUTHORITIES IN CONTEXT
 	   ResultPair[] testingAuthority =  
 		   {	   
@@ -523,6 +562,13 @@ public class UrlValidatorTest extends TestCase
 				   new ResultPair("http://" + "youtube.cc", true), 	     							// TEST .cc
 				   new ResultPair("http://" + "user:password@host:81", true),						// TEST username/password/port format 
 				   new ResultPair("http://" + "255.255.255.255:81", true),	 						// TEST port option on host
+				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]", true), 	// FALSE: IPV6 
+				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]", true),            	// FALSE: IPV6
+				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]", true),         			// FALSE: IPV6 
+				   new ResultPair("http://" + "[1080::8:800:200C:417A]", true),            	        // FALSE: IPV6
+				   new ResultPair("http://" + "[::192.9.5.5]", true),            				    // FALSE: IPV6
+				   new ResultPair("http://" + "[::FFFF:129.144.52.38]", true),                      // FALSE: IPV6
+				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]", true),                 // FALSE: IPV6 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
 				   new ResultPair("http://" + "172.192.172.256", false), 							// FALSE invalid IPV4 	
 				   new ResultPair("http://" + "10.11.12.13.14", false),      						// FALSE invalid IPV4
 				   new ResultPair("http://" + "1.1.1.1.", false),       							// FALSE invalid IPV4 format (trailing dot)
@@ -532,14 +578,7 @@ public class UrlValidatorTest extends TestCase
 				   new ResultPair("http://" + "go.1aa", false),         							// FALSE invalid host 
 				   new ResultPair("http://" + ".aaa", false),            							// FALSE invalid format
 				   new ResultPair("http://" + "aaa.", false),            							// FALSE invalid format
-				   new ResultPair("http://" + "aaa", false),            							// FALSE invalid format    
-				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]", false), 	// FALSE: IPV6 
-				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]", false),            	// FALSE: IPV6
-				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]", false),         			// FALSE: IPV6 
-				   new ResultPair("http://" + "[1080::8:800:200C:417A]", false),            	    // FALSE: IPV6
-				   new ResultPair("http://" + "[::192.9.5.5]", false),            				    // FALSE: IPV6
-				   new ResultPair("http://" + "[::FFFF:129.144.52.38]", false),                     // FALSE: IPV6
-				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]", false)                 // FALSE: IPV6 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
+				   new ResultPair("http://" + "aaa", false)	            							// FALSE invalid format    
 		   };
 	   
 	   teststruct TestArr[] = new teststruct[27]; 
@@ -576,11 +615,241 @@ public class UrlValidatorTest extends TestCase
 
 	   }
 	   
-	   
-	   System.out.println("PART 2: Testing authority strings with full 'isValid' call: \n\n");
+	   System.out.println("PART 2: Testing authority strings with full 'isValid()' call: \n\n");
 	   teststruct.printResults(TestArr);
+   }
+   
+   // NOTE: ALL WILL FAIL DUE TO isValidAuthoirty bug, but these tests relevant when that bug resolved
+   public void testRandomPorts()
+   {
+	   System.out.println("TESTING RANDOM PORTS \n\n");
+	   
+	   long options =
+	            UrlValidator.ALLOW_ALL_SCHEMES;
+	   
+	   UrlValidator urlValRandPorts = new UrlValidator(options);
+	   // create arrays of port numbers
+	   
+	   // TEST DEPENDS ON ASSUMING http://www.google.com returns valid
+	   try 
+	   {
+		   boolean preliminary = urlValRandPorts.isValid("http://www.google.com");
+	   }
+	   catch (Exception e)
+	   {
+		   System.out.println("CRASHED on preliminary test case: http://www.google.com\n\n");
+		   return; 
+	   }
+	   
+	   int min = 1; 
+	   int max = 65535;
+	   int ArrValid[] = new int[2000];
+	   
+	   for(int i = 0; i < 2000; i++)
+	   {
+		   int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
+		   ArrValid[i] = randomNum;
+	   }
+	  
+	   // create random port numbers out of range (expect all to be invalid)
+	   int min2 = 65536; 
+	   int max2 = 10000000;
+	   int ArrInValid[] = new int[2000];
 	   
 	   
+	   for(int i = 0; i < 2000; i++)
+	   {
+		   int randomNum = ThreadLocalRandom.current().nextInt(min2, max2 + 1);
+		   ArrInValid[i] = randomNum;
+	   }
+	   
+	   // using ftp to get to isValidAuthority call (not called with http)
+	   // furthermore anything with ":" and http returns false
+	   String prePort = "ftp://www.google.com:";
+	   String auth = "www.google.com:";
+	   String postPort = "/test1";
+	   
+	   teststruct TestArr[] = new teststruct[2000]; 
+	   
+	   for (int i = 0; i < 2000; i++)
+	   {
+		   String s=String.valueOf(ArrValid[i]);
+		   TestArr[i] = new teststruct();
+		   TestArr[i].url = prePort + s + postPort; 
+		   
+		   TestArr[i].expect = true;
+		  
+	   }
+	   boolean result;
+	   String resultArr[] = new String[2000];
+	   
+	   System.out.println();
+	   System.out.println("Testing random valid ports in isValidAuthority() call: \n");
+	   
+	   for(int j = 0; j < 2000; j++)
+	   {
+		   	try
+	   		{
+			   String p = String.valueOf(ArrValid[j]);
+			   String q = auth + p;
+			   result = urlValRandPorts.isValidAuthority(q);
+			   if(result)
+				   resultArr[j] = "true";
+			   else
+				   resultArr[j] = "false";
+			  
+	   		}
+	   		catch(Throwable t)
+	   		{
+	   			resultArr[j] = "Exception Thrown";
+	   		}
+	  
+	   }
+	   
+	   // count up Pass, Fail, Exceptions
+	   int numTrue = 0;
+	   int numFalse = 0; 
+	   int numExceptions = 0; 
+	   
+	   for(int k = 0; k < 2000; k++)
+	   {
+		   if(resultArr[k] == "true")
+			   numTrue++;
+		   else if(resultArr[k] == "false")
+			   numFalse++;
+		   else if(resultArr[k] == "Exception Thrown")
+			   numExceptions++;
+	   }
+	   
+	   // print summary from random valid port call to isValidAuthoirty
+	   System.out.println();
+	   System.out.println("Summary of results for random valid ports called to isValidAuthoirty(): \n");
+	   System.out.println("# return TRUE (PASS): " + numTrue + "\n\n");
+	   System.out.println("# return FALSE (FAIL): " + numFalse + "\n\n");
+	   System.out.println("# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+	   
+	   
+	   // REPEAT WITH INVALID PORTS
+	   teststruct TestArr2[] = new teststruct[2000]; 
+	   
+	   for (int i = 0; i < 2000; i++)
+	   {
+		   String s=String.valueOf(ArrInValid[i]);
+		   TestArr2[i] = new teststruct();
+		   TestArr2[i].url = prePort + s + postPort; 
+		   
+		   TestArr2[i].expect = false;
+		  
+	   }
+	   boolean result2;
+	   String resultArr2[] = new String[2000];
+	   
+	   System.out.println();
+	   System.out.println("Testing random valid ports in isValidAuthority() call: \n");
+	   
+	   for(int j = 0; j < 2000; j++)
+	   {
+		   	try
+	   		{
+			   String p = String.valueOf(ArrInValid[j]);
+			   String q = auth + p;
+			   result = urlValRandPorts.isValidAuthority(q);
+			   if(result)
+				   resultArr2[j] = "true";
+			   else
+				   resultArr2[j] = "false";
+			  
+	   		}
+	   		catch(Throwable t)
+	   		{
+	   			resultArr2[j] = "Exception Thrown";
+	   		}
+	  
+	   }
+	   
+	   // count up Pass, Fail, Exceptions
+	   numTrue = 0;
+	   numFalse = 0; 
+	   numExceptions = 0; 
+	   
+	   for(int k = 0; k < 2000; k++)
+	   {
+		   if(resultArr2[k] == "true")
+			   numTrue++;
+		   else if(resultArr2[k] == "false")
+			   numFalse++;
+		   else if(resultArr2[k] == "Exception Thrown")
+			   numExceptions++;
+	   }
+	   
+	   // print summary from random valid port call to isValidAuthoirty
+	   System.out.println();
+	   System.out.println("Summary of results for random INVALID ports called to isValidAuthoirty(): \n");
+	   System.out.println("# return TRUE (PASS): " + numTrue + "\n\n");
+	   System.out.println("# return FALSE (FAIL): " + numFalse + "\n\n");
+	   System.out.println("# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+	   
+	   // NOW CALL isValid() with the same ports (starting with valid ports)
+	   for (int j = 0; j < 2000; j++)
+	   {
+		   try
+		   {
+			   result = urlValRandPorts.isValid(TestArr[j].url);
+			   TestArr[j].crash = false;
+			   TestArr[j].isValidReturn = result; 
+			   if(TestArr[j].expect == TestArr[j].isValidReturn)
+				   TestArr[j].pass = true;
+			   else
+				   TestArr[j].pass = false;
+				   
+		   }
+		   catch (Throwable t)
+		   {
+			   TestArr[j].crash = true;
+		   }
+
+	   }
+	   // NOW CALL isValid() with the invalid ports
+	   // NOW CALL isValid() with the same ports (starting with valid ports)
+	   for (int j = 0; j < 2000; j++)
+	   {
+		   try
+		   {
+			   result = urlValRandPorts.isValid(TestArr2[j].url);
+			   TestArr2[j].crash = false;
+			   TestArr2[j].isValidReturn = result; 
+			   if(TestArr2[j].expect == TestArr2[j].isValidReturn)
+				   TestArr2[j].pass = true;
+			   else
+				   TestArr2[j].pass = false;
+				   
+		   }
+		   catch (Throwable t)
+		   {
+			   TestArr2[j].crash = true;
+		   }
+
+	   }
+	   
+	   // compare the results to elucidate contextual influences
+	   String s1 = "valid port";
+	   String s2 = "invalid port";
+	   
+	   teststruct.compareTestStructArrays(TestArr, TestArr2, s1, s2);
+	   
+	   
+   }
+   
+// NOTE: ALL WILL FAIL DUE TO isValidAuthoirty bug, but these tests will be useful when that bug resolved
+   public void testRandomIP()
+   {
+	   // create random correct ipv4 expect all valid
+	   
+	   // create random incorrect ipv4 expect all invalid
+	   
+	   // create random correct ipv6 expect all valid
+	   
+	   // create random incorrect ipv6 epect all invalid
    }
    
    // POSSIBLE OTHER UNIT TESTS DEPENDING ON DANEIL'S TESTS
