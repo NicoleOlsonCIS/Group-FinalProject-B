@@ -18,7 +18,7 @@ public class UrlValidatorTest extends TestCase
    }
 
    
-   
+   // TO DO: Replace with 
    public void testManualTest()
    {
 	   
@@ -110,6 +110,7 @@ public class UrlValidatorTest extends TestCase
 	   boolean httpError = false;
 	   boolean httpsError = false;
 	   boolean ftpError = false;
+	   boolean fError = false;
 	   
 	   
 	   System.out.println("\tTesting constructor initialization of allowable schemes: http, https, ftp\n");
@@ -140,8 +141,18 @@ public class UrlValidatorTest extends TestCase
 	   }
 	   else if(urlVal.isValidScheme("ftp"))
 		   System.out.print("\t\tftp: PASS\n");
+	   
 		  
-	   if(!(httpError || httpsError || ftpError))
+	   // TEST isValidScheme call in context of instantiated UrlValidator
+	   if (urlVal.isValidScheme("xyz"))
+	   {
+		   System.out.print("\t\txyz: FAIL\n");
+		   fError = true;
+	   }
+	   else if(!urlVal.isValidScheme("xyz"))
+		   System.out.print("\t\txyz: PASS\n");
+		  
+	   if(!(httpError || httpsError || ftpError || fError))
 	   {
 		   // Trace Statements for debugging
 		   // System.out.println();
@@ -245,7 +256,7 @@ public class UrlValidatorTest extends TestCase
 	   boolean httpsErrorB = false;
 	   boolean ftpErrorB = false;
 	   boolean XttpError = false;
-	   boolean fError = false;
+	   boolean fsError = false;
 	   
 	   UrlValidator urlVal2 = new UrlValidator(options);
 	   
@@ -299,7 +310,7 @@ public class UrlValidatorTest extends TestCase
 		   if(urlVal2.isValidScheme(fArr[k]))
 		   {
 			   System.out.print("\t\t" + fArr[k] + ": FAIL \n");
-			   fError = true;
+			   fsError = true;
 		   }
 		   else if(!urlVal2.isValidScheme(fArr[k]))
 			   System.out.print("\t\t" + fArr[k] + " PASS \n");
@@ -308,7 +319,7 @@ public class UrlValidatorTest extends TestCase
 	   System.out.println();
 	   
 	   // if things that are supposed to be true evaluate to false, do not context tests
-	   if(!(httpErrorB || httpsErrorB || ftpErrorB || XttpError || fError))
+	   if(!(httpErrorB || httpsErrorB || ftpErrorB || XttpError || fsError))
 	   {
 		   
 		   System.out.println("\tUnit test calls to isValid() for ALLOW_ALL_SCHEMES . . . \n");
@@ -350,15 +361,15 @@ public class UrlValidatorTest extends TestCase
 					   new ResultPair("http://" + "www.google.com", true),
 					   new ResultPair("ftp://" + "www.google.com", true),
 					   new ResultPair("h3t://" + "www.google.com", true),
-					   new ResultPair("Xttp://" + "www.google.com", true),	// TEST START WITH CAPITAL + valid format ://
-					   new ResultPair("htfp:/" + "www.google.com", false),  // FALSE: invalid format, no ":/" allowed
-					   new ResultPair("-ttp:" + "www.google.com", false),   // FALSE: invalid format begins with a non-letter and ":"
-					   new ResultPair("htkp/" + "www.google.com", false),	// FALSE: inavlid format "/" not allowed
-					   new ResultPair(":=/" + "www.google.com", false),   	// FALSE: invalid format begins with a non-letter, "="
-					   new ResultPair(">ht://" + "www.google.com", false), 	// FALSE: invalid format begins with a non-letter
+					   new ResultPair("xTtp://" + "www.google.com", true),	
+					   new ResultPair("h-fp://" + "www.google.com", true), 
+					   new ResultPair("httpppp://" + "www.google.com", true),
+					   new ResultPair("h://" + "www.google.com", true),		
+					   new ResultPair(":ttp://" + "www.google.com", false), // FALSE: invalid format begins with a non-letter
+					   new ResultPair("h*tp://" + "www.google.com", false), // FALSE: invalid format of second letter
 					   new ResultPair("Xttp:/" + "www.google.com", false),	// FALSE: invalid format, ":/" not allowed
 					   new ResultPair("h_tp:" + "www.google.com", false),   // FALSE: invalid format "_" not allowed
-					   new ResultPair("http/" + "www.google.com", false),   // FALSE: invalid format begins with a non-letter
+					   new ResultPair("/" + "www.google.com", false),       // FALSE: invalid format begins with a non-letter
 					   new ResultPair("://" + "www.google.com", false),     // FALSE: invalid format begins with a non-letter 
 					   new ResultPair("3ht://" + "www.google.com", false),  // FALSE: invalid format begins with a non-letter
 					   new ResultPair("http:/" + "www.google.com", false),  // FALSE: invalid format ":/"
@@ -372,7 +383,7 @@ public class UrlValidatorTest extends TestCase
 			   TestArr2[i] = new teststruct();
 			   TestArr2[i].url = testingScheme2[i].item;
 			   
-			  if(i < 4)
+			  if(i < 7)
 				  TestArr2[i].expect = true;
 			  else
 				  TestArr2[i].expect = false;
@@ -658,7 +669,23 @@ public class UrlValidatorTest extends TestCase
 	   teststruct.printResultsToFile(TestArr, "Authority_Unit_Test_Results.txt", "IsValid() Calls Testing Authority");
    }
    
-   // NOTE: ALL WILL FAIL DUE TO isValidAuthoirty bug, but these tests relevant when that bug resolved
+  
+   public void testPath()
+   {
+	   // "A path. The path identifies the specific 
+	   // resource in the host that the web client wants to access. 
+	   // For example, /software/htp/cics/index.html."
+	   // https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.1.0/com.ibm.cics.ts.internet.doc/topics/dfhtl_uricomp.html
+	   
+	   
+	   
+	   
+	   //System.out.println();
+	   //System.out.println("UNIT TEST: Testing isValidPath() call in isValid()"); 
+	   
+   }
+   
+
    public void testRandomPorts()
    {
 	   System.out.println("TESTING RANDOM PORTS \n\n");
@@ -882,7 +909,6 @@ public class UrlValidatorTest extends TestCase
 	   
    }
    
-// NOTE: ALL WILL FAIL DUE TO isValidAuthoirty bug, but these tests will be useful when that bug resolved
    public void testRandomIP()
    {
 	   // create random correct ipv4 expect all valid
@@ -1725,27 +1751,17 @@ public class UrlValidatorTest extends TestCase
 		   
    }
    
-   // POSSIBLE OTHER UNIT TESTS DEPENDING ON DANEIL'S TESTS
-   /*public void testPath()
-   {
-	   //System.out.println();
-	   //System.out.println("UNIT TEST: Testing isValidPath() call in isValid()"); 
-	   
-   }
+   
+   /* TO DO:
    public void testQuery()
    {
 	   //System.out.println();
-	   //System.out.println("UNIT TEST: Testing isValidQuery() call in isValid()"); 
-	   
-   }
-   public void testFragment()
-   {
-	   //System.out.println();
-	   //System.out.println("UNIT TEST: Testing isValidFragment() call in isValid()"); 
+	   //System.out.println("UNIT TEST: Testing query evaluation of isValid()"); 
 	   
    }
 
    */
+   
    public void testYourFirstPartition()
    {
 	 //You can use this function to implement your First Partition testing	   
