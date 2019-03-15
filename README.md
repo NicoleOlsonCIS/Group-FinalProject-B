@@ -25,7 +25,7 @@ TO DO:
 Manual Testing could be written again, the one there was just a draft to get going with the code ... (~1-hours)
 
 testPath()
-    Unit test of Path(not options settings - allow two slashes) (~2-hours, use structures in place and follow method of testing in other unit tests)
+    Unit test of Path(note options settings - allow two slashes) (~2-hours, use structures in place and follow method of testing in other unit tests)
 
 testFragment()
     Unit test of Fragment (note options settings - allow fragments) (~2-hours, use structures in place and follow method of testing in other unit tests)
