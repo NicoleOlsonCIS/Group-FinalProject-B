@@ -565,18 +565,18 @@ public class UrlValidatorTest extends TestCase
 				   new ResultPair("http://" + "255.255.255.255", true),	 							// TEST upper bounds of IPV4
 				   new ResultPair("http://" + "172.com", true),   	     							// TEST IP host 
 				   new ResultPair("http://" + "youtube.cc", true), 	     							// TEST .cc
-				   new ResultPair("http://" + "user:password@host:81", true),						// TEST username/password/port format 
-				   new ResultPair("http://" + "255.255.255.255:81", true),	 						// TEST port option on host
-				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]", true), 	// TEST: Valid IPV6 Type1 
-				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]", true),            	// TEST: Valid IPV6 Type2
-				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]", true),         			// TEST: Valid IPV6 Type3
-				   new ResultPair("http://" + "[1080::8:800:200C:417A]", true),            	        // TEST: Valid IPV6 Type4
-				   new ResultPair("http://" + "[::192.9.5.5]", true),            				    // TEST: Valid IPV6 Type5
-				   new ResultPair("http://" + "[::FFFF:129.144.52.38]", true),                      // TEST: Valid IPV6 Type6
-				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]", true),                 // TEST: Valid IPV6 Type7 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
-				   new ResultPair("http://" + "172.192.172.256", false), 							// FALSE invalid IPV4 	
-				   new ResultPair("http://" + "10.11.12.13.14", false),      						// FALSE invalid IPV4
-				   new ResultPair("http://" + "1.1.1.1.", false),       							// FALSE invalid IPV4 format (trailing dot)
+				   new ResultPair("http://" + "user:password@host:81/path", true),						// TEST username/password/port format 
+				   new ResultPair("http://" + "255.255.255.255:81/path", true),	 						// TEST port option on host
+				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]/path", true), 	// TEST: Valid IPV6 Type1 
+				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]/path", true),            	// TEST: Valid IPV6 Type2
+				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]/path", true),         			// TEST: Valid IPV6 Type3
+				   new ResultPair("http://" + "[1080::8:800:200C:417A]/path", true),            	        // TEST: Valid IPV6 Type4
+				   new ResultPair("http://" + "[::192.9.5.5]/path", true),            				    // TEST: Valid IPV6 Type5
+				   new ResultPair("http://" + "[::FFFF:129.144.52.38]/path", true),                      // TEST: Valid IPV6 Type6
+				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]/path", true),                 // TEST: Valid IPV6 Type7 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
+				   new ResultPair("http://" + "172.192.172.256/path", false), 							// FALSE invalid IPV4 	
+				   new ResultPair("http://" + "10.11.12.13.14/path", false),      						// FALSE invalid IPV4
+				   new ResultPair("http://" + "1.1.1.1./path", false),       							// FALSE invalid IPV4 format (trailing dot)
 				   new ResultPair("http://" + "1.2.3", false),           							// FALSE invalid IPV4 (insufficient address components)
 				   new ResultPair("http://" + ".1.2.3.4", false),        							// FALSE invalid IPV4 format (leading dot)
 				   new ResultPair("http://" + "go.a", false),            							// FALSE invalid host
@@ -854,11 +854,842 @@ public class UrlValidatorTest extends TestCase
    {
 	   // create random correct ipv4 expect all valid
 	   
-	   // create random incorrect ipv4 expect all invalid
+	   // ipv4 format is 0-255.0-255.0-255.0-255
+	   System.out.println("TESTING RANDOM IP ADDRESSES \n\n");
 	   
-	   // create random correct ipv6 expect all valid
+	   long options =
+	            UrlValidator.ALLOW_ALL_SCHEMES;
 	   
-	   // create random incorrect ipv6 epect all invalid
+	   UrlValidator urlValRandPorts = new UrlValidator(options);
+	   // create arrays of port numbers
+	   
+	   // TEST DEPENDS ON ASSUMING http://www.google.com returns valid
+	   try 
+	   {
+		   boolean preliminary = urlValRandPorts.isValid("http://www.google.com");
+	   }
+	   catch (Exception e)
+	   {
+		   System.out.println("\tCRASHED on preliminary test case: http://www.google.com\n\n");
+		   return; 
+	   }
+	   
+	   System.out.println("\tPart 1: Test Random Valid ipv4 \n\n");
+	   
+
+	  // BUILDING ARRAY OF VALID IPV4
+	  int min = 0; 
+	  int max = 255;
+	  int ArrValid[] = new int[8000];
+	   
+	  // generate 8000 numbers in range 
+	  for(int i = 0; i < 8000; i++)
+	  {
+		   int randomNum = ThreadLocalRandom.current().nextInt(min, max);
+		   // System.out.println(randomNum);
+		   ArrValid[i] = randomNum;
+	  }
+	  // create 4000 ip addresses by concatenation
+	  
+	  String validIPV4[] = new String[2000];
+	  int a, b, c, d;
+	  int count = 0;
+	  
+	  for(int i = 0; i < 8000; i+=4)
+	  {
+		  a = ArrValid[i];
+		  b = ArrValid[i+1];
+		  c = ArrValid[i+2];
+		  d = ArrValid[i+3];
+		  
+		  String e=String.valueOf(a);
+		  String f=String.valueOf(b);
+		  String g=String.valueOf(c);
+		  String h=String.valueOf(d);
+
+		  String ipv4 = e + "." + f + "." + g + "." + h;
+		  
+		  // for debugging
+		  // System.out.println(ipv4);
+		  
+		  validIPV4[count] = ipv4;
+		  count++;
+	  }
+	  
+	  	  // BUILDING ARRAY OF INVALID IPV4
+		  min = 255; 
+		  max = 1000;
+		  
+		  int ArrInvalid[] = new int[8000];
+		   
+		  // generate 8000 numbers out of range 
+		  for(int i = 0; i < 8000; i++)
+		  {
+			   int randomNum = ThreadLocalRandom.current().nextInt(min, max);
+			   
+			   // make every third value negative
+			   if(i % 3 == 0)
+				   randomNum = randomNum * -1;
+			   
+			   //System.out.println(randomNum);
+			   
+			   ArrInvalid[i] = randomNum;
+		  }
+		  // create 4000 ip addresses by concatenation
+		  
+		  String invalidIPV4[] = new String[2000];
+		  count = 0;
+		  
+		  for(int i = 0; i < 8000; i+=4)
+		  {
+			 
+			  a = ArrInvalid[i];
+			  b = ArrInvalid[i+1];
+			  c = ArrInvalid[i+2];
+			  d = ArrInvalid[i+3];
+			  
+			  String q=String.valueOf(a);
+			  
+			  String r=String.valueOf(b);
+
+			  String s=String.valueOf(c);
+
+			  String t=String.valueOf(d);
+			  
+
+			  String ipv4 = q + "." + r + "." + s + "." + t;
+			  
+			  // for debugging
+			  // System.out.println(ipv4);
+			  
+			  invalidIPV4[count] = ipv4;
+			  count++;
+			  
+		  }
+	  
+	      // BUILD ARRAY OF VALID IPV6
+	      // ex 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+	      // ASCII 97 to 102 for lower case letters, 48 to 57 for 0-9
+		  
+	      // fill array with random ASCII 97 to 102
+		  String ArrASCII_1[] = new String[32000];
+		  for(int i = 0; i < 32000; i++)
+		  {
+			   int randomNum = ThreadLocalRandom.current().nextInt(97, 102);
+			   // System.out.println(randomNum);
+			   char ch = (char)randomNum;
+			   String s=String.valueOf(ch);
+			   ArrASCII_1[i] = s;
+		  }
+		  
+	      // fill array with random ASCII 48 to 57
+		  String ArrASCII_2[] = new String[32000];
+		  for(int i = 0; i < 32000; i++)
+		  {
+			   int randomNum = ThreadLocalRandom.current().nextInt(48, 57);
+			   // System.out.println(randomNum);
+			   char ch = (char)randomNum;
+			   String s=String.valueOf(ch);
+			   ArrASCII_2[i] = s;
+		  }
+		  
+		  // create format from random array contents 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+		  // create 2000 ipv6 strings
+		  String q1, q2, q3, q4, q5, q6, q7, q8;
+		  String qq, rr, ss, tt;
+		  String ipv6;
+		  count = 0; 
+		  String validIPV6[] = new String[1000];
+		  
+		  for(int i = 0; i < 32000; i+=32)
+		  {
+			  // if i is divisible by 3 start with letters
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_2[i];
+				  rr = ArrASCII_1[i + 1];
+				  ss = ArrASCII_2[i + 2];
+				  tt = ArrASCII_1[i + 3];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i];
+				  rr = ArrASCII_2[i + 1];
+				  ss = ArrASCII_1[i + 2];
+				  tt = ArrASCII_2[i + 3];
+			  }
+			  
+			  q1 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_2[i + 4];
+				  rr = ArrASCII_1[i + 5];
+				  ss = ArrASCII_2[i + 6];
+				  tt = ArrASCII_1[i + 7];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 4];
+				  rr = ArrASCII_2[i + 5];
+				  ss = ArrASCII_1[i + 6];
+				  tt = ArrASCII_2[i + 7];
+			  }
+			  
+			  q2 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_2[i + 8];
+				  rr = ArrASCII_1[i + 9];
+				  ss = ArrASCII_1[i + 10];
+				  tt = ArrASCII_1[i + 11];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 8];
+				  rr = ArrASCII_1[i + 9];
+				  ss = ArrASCII_1[i + 10];
+				  tt = ArrASCII_2[i + 11];
+			  }
+			  
+			  q3 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 3 start with numbers
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_2[i + 12];
+				  rr = ArrASCII_2[i + 13];
+				  ss = ArrASCII_2[i + 14];
+				  tt = ArrASCII_1[i + 15];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 12];
+				  rr = ArrASCII_2[i + 13];
+				  ss = ArrASCII_2[i + 14];
+				  tt = ArrASCII_1[i + 15];
+			  }
+			  
+			  q4 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 3 start with letters
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_2[i + 16];
+				  rr = ArrASCII_1[i + 17];
+				  ss = ArrASCII_2[i + 18];
+				  tt = ArrASCII_1[i + 19];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 16];
+				  rr = ArrASCII_2[i + 17];
+				  ss = ArrASCII_1[i + 18];
+				  tt = ArrASCII_2[i + 19];
+			  }
+			  
+			  q5 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_2[i + 20];
+				  rr = ArrASCII_1[i + 21];
+				  ss = ArrASCII_2[i + 22];
+				  tt = ArrASCII_1[i + 23];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 20];
+				  rr = ArrASCII_2[i + 21];
+				  ss = ArrASCII_1[i + 22];
+				  tt = ArrASCII_2[i + 23];
+			  }
+			  
+			  q6 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_2[i + 24];
+				  rr = ArrASCII_1[i + 25];
+				  ss = ArrASCII_1[i + 26];
+				  tt = ArrASCII_1[i + 27];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 24];
+				  rr = ArrASCII_1[i + 25];
+				  ss = ArrASCII_1[i + 26];
+				  tt = ArrASCII_2[i + 27];
+			  }
+			  
+			  q7 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 3 start with numbers
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_2[i + 28];
+				  rr = ArrASCII_2[i + 29];
+				  ss = ArrASCII_2[i + 30];
+				  tt = ArrASCII_1[i + 31];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 28];
+				  rr = ArrASCII_2[i + 29];
+				  ss = ArrASCII_2[i + 30];
+				  tt = ArrASCII_1[i + 31];
+			  }
+			  
+			  q8 = qq + rr + ss + tt;
+			  
+			  
+			  // if count divisible by 13, add extra ":" instead of a chars
+			  if(count % 5 == 0)
+			  {
+				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + "::" + "]";
+			  }
+			  else
+			  {
+				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + ":" + q5 + ":" + q6 + ":" + q7 + ":" + q8 + "]";
+			  }
+			  
+			  validIPV6[count] = ipv6;
+			  // for debugging
+			  // System.out.println(ipv6);
+			  count ++;
+			  
+		  }
+		  
+		  // BUILD ARRAY OF INVALID IPV6
+	      // ex 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+	      // ASCII 97 to 102 for lower case letters, 33 to 47 (nonsense characters)
+		  
+	      // fill array with random ASCII 97 to 102
+		  String ArrASCII_3[] = new String[32000];
+		  for(int i = 0; i < 32000; i++)
+		  {
+			   int randomNum = ThreadLocalRandom.current().nextInt(97, 102);
+			   // System.out.println(randomNum);
+			   char ch = (char)randomNum;
+			   String s=String.valueOf(ch);
+			   ArrASCII_3[i] = s;
+		  }
+		  
+	      // fill array with random ASCII 48 to 57
+		  String ArrASCII_4[] = new String[32000];
+		  for(int i = 0; i < 32000; i++)
+		  {
+			   int randomNum = ThreadLocalRandom.current().nextInt(33, 47);
+			   // System.out.println(randomNum);
+			   char ch = (char)randomNum;
+			   String s=String.valueOf(ch);
+			   ArrASCII_4[i] = s;
+		  }
+		  
+		  count = 0; 
+		  String invalidIPV6[] = new String[1000];
+		  
+		  for(int i = 0; i < 32000; i+=32)
+		  {
+			  // if i is divisible by 3 start with letters
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_3[i];
+				  rr = ArrASCII_4[i + 1];
+				  ss = ArrASCII_2[i + 2];
+				  tt = ArrASCII_1[i + 3];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_4[i];
+				  rr = ArrASCII_2[i + 1];
+				  ss = ArrASCII_1[i + 2];
+				  tt = ArrASCII_3[i + 3];
+			  }
+			  
+			  q1 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_4[i + 4];
+				  rr = ArrASCII_4[i + 5];
+				  ss = ArrASCII_4[i + 6];
+				  tt = ArrASCII_4[i + 7];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_3[i + 4];
+				  rr = ArrASCII_4[i + 5];
+				  ss = ArrASCII_3[i + 6];
+				  tt = ArrASCII_4[i + 7];
+			  }
+			  
+			  q2 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_2[i + 8];
+				  rr = ArrASCII_1[i + 9];
+				  ss = ArrASCII_3[i + 10];
+				  tt = ArrASCII_4[i + 11];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_3[i + 8];
+				  rr = ArrASCII_3[i + 9];
+				  ss = ArrASCII_3[i + 10];
+				  tt = ArrASCII_3[i + 11];
+			  }
+			  
+			  q3 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 3 start with numbers
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_4[i + 12];
+				  rr = ArrASCII_3[i + 13];
+				  ss = ArrASCII_4[i + 14];
+				  tt = ArrASCII_3[i + 15];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_4[i + 12];
+				  rr = ArrASCII_4[i + 13];
+				  ss = ArrASCII_4[i + 14];
+				  tt = ArrASCII_4[i + 15];
+			  }
+			  
+			  q4 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 3 start with letters
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_1[i + 16];
+				  rr = ArrASCII_1[i + 17];
+				  ss = ArrASCII_3[i + 18];
+				  tt = ArrASCII_1[i + 19];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_1[i + 16];
+				  rr = ArrASCII_4[i + 17];
+				  ss = ArrASCII_4[i + 18];
+				  tt = ArrASCII_4[i + 19];
+			  }
+			  
+			  q5 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_2[i + 20];
+				  rr = ArrASCII_3[i + 21];
+				  ss = ArrASCII_3[i + 22];
+				  tt = ArrASCII_4[i + 23];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_3[i + 20];
+				  rr = ArrASCII_3[i + 21];
+				  ss = ArrASCII_4[i + 22];
+				  tt = ArrASCII_4[i + 23];
+			  }
+			  
+			  q6 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 2 start with letters
+			  if(i % 2 == 0)
+			  {
+				  qq = ArrASCII_4[i + 24];
+				  rr = ArrASCII_4[i + 25];
+				  ss = ArrASCII_3[i + 26];
+				  tt = ArrASCII_3[i + 27];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_3[i + 24];
+				  rr = ArrASCII_3[i + 25];
+				  ss = ArrASCII_3[i + 26];
+				  tt = ArrASCII_4[i + 27];
+			  }
+			  
+			  q7 = qq + rr + ss + tt;
+			  
+			  // if i is divisible by 3 start with numbers
+			  if(i % 3 == 0)
+			  {
+				  qq = ArrASCII_4[i + 28];
+				  rr = ArrASCII_3[i + 29];
+				  ss = ArrASCII_4[i + 30];
+				  tt = ArrASCII_3[i + 31];
+			  }
+			  else
+			  {
+				  qq = ArrASCII_4[i + 28];
+				  rr = ArrASCII_3[i + 29];
+				  ss = ArrASCII_4[i + 30];
+				  tt = ArrASCII_3[i + 31];
+			  }
+			  
+			  q8 = qq + rr + ss + tt;
+			  
+			  
+			  // if count divisible by 13, add extra ":" instead of a chars
+			  if(count % 7 == 0)
+			  {
+				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + "::" + "]";
+			  }
+			  else
+			  {
+				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + ":" + q5 + ":" + q6 + ":" + q7 + ":" + q8 + "]";
+			  }
+			  
+			  invalidIPV6[count] = ipv6;
+			  // for debugging
+			  // System.out.println(ipv6);
+			  count ++;
+		  }
+		  
+		  // CREATED AT THIS POINT
+	      // 1 array of valid 1pv4 size 2000 validIPV4
+		  // 1 array of invalid 1pv4 size 2000 invalidIPV4
+		  // 1 array valid ipv6 size 1000 validIPV6
+		  // 1 array invalid ipv6 size 1000 invalidIPV6
+		  
+		  // Attempt to test IPV4 and IPV6 addresses directly
+		   
+		   System.out.println();
+		   System.out.println("\tAttempting to create InetAddressValidator.getInstance(): \n");
+		   try
+		   {
+			   InetAddressValidator iNet = InetAddressValidator.getInstance();
+			   System.out.println("\t\t Result: Successful InetAddressValidator creation \n");
+			   
+			   // run tests on ipv addresses directly and store results for printing
+			   String resultArr1[] = new String[2000];
+			   String resultArr2[] = new String[2000];
+			   String resultArr3[] = new String[1000];
+			   String resultArr4[] = new String[1000];
+			   
+			   for(int j = 0; j < 2000; j++)
+			   {
+				   	try
+			   		{
+				   		boolean result = iNet.isValidInet4Address(validIPV4[j]);
+					    if(result)
+						    resultArr1[j] = "true";
+					    else
+						    resultArr1[j] = "false";
+					  
+			   		}
+			   		catch(Throwable t)
+			   		{
+			   			resultArr1[j] = "Exception Thrown";
+			   		}
+			  
+			   }
+			   for(int j = 0; j < 2000; j++)
+			   {
+				   	try
+			   		{
+				   		boolean result = iNet.isValidInet4Address(invalidIPV4[j]);
+					    if(result)
+						    resultArr2[j] = "true";
+					    else
+						    resultArr2[j] = "false";
+					  
+			   		}
+			   		catch(Throwable t)
+			   		{
+			   			resultArr2[j] = "Exception Thrown";
+			   		}
+			  
+			   }
+			   for(int j = 0; j < 1000; j++)
+			   {
+				   	try
+			   		{
+				   		boolean result = iNet.isValidInet6Address(validIPV6[j]);
+					    if(result)
+						    resultArr3[j] = "true";
+					    else
+						    resultArr3[j] = "false";
+					  
+			   		}
+			   		catch(Throwable t)
+			   		{
+			   			resultArr3[j] = "Exception Thrown";
+			   		}
+			  
+			   }
+			   for(int j = 0; j < 1000; j++)
+			   {
+				   	try
+			   		{
+				   		boolean result = iNet.isValidInet6Address(invalidIPV6[j]);
+					    if(result)
+						    resultArr4[j] = "true";
+					    else
+						    resultArr4[j] = "false";
+					  
+			   		}
+			   		catch(Throwable t)
+			   		{
+			   			resultArr4[j] = "Exception Thrown";
+			   		}
+			  
+			   }
+			   
+			   // count up results and print
+			   // count up Pass, Fail, Exceptions
+			   int numTrue = 0;
+			   int numFalse = 0; 
+			   int numExceptions = 0; 
+			   
+			   for(int k = 0; k < 2000; k++)
+			   {
+				   if(resultArr1[k] == "true")
+					   numTrue++;
+				   else if(resultArr1[k] == "false")
+					   numFalse++;
+				   else if(resultArr1[k] == "Exception Thrown")
+					   numExceptions++;
+			   }
+			   
+			   // print summary from random valid ipv4 call to isValidAuthoirty
+			   System.out.println();
+			   System.out.println("\tSummary of results for random VALID ipv4 called to isValidInet4Addres(): \n");
+			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
+			   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+			   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+			   
+			   numTrue = 0;
+			   numFalse = 0; 
+			   numExceptions = 0; 
+			   
+			   for(int k = 0; k < 2000; k++)
+			   {
+				   if(resultArr2[k] == "true")
+					   numTrue++;
+				   else if(resultArr2[k] == "false")
+					   numFalse++;
+				   else if(resultArr2[k] == "Exception Thrown")
+					   numExceptions++;
+			   }
+			   // print summary from random invalid ipv4 call to isValidAuthoirty
+			   System.out.println();
+			   System.out.println("\tSummary of results for random INVALID ipv4 called to isValidInet4Addres(): \n");
+			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
+			   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+			   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+			  
+			   numTrue = 0;
+			   numFalse = 0; 
+			   numExceptions = 0; 
+			   
+			   for(int k = 0; k < 1000; k++)
+			   {
+				   if(resultArr3[k] == "true")
+					   numTrue++;
+				   else if(resultArr3[k] == "false")
+					   numFalse++;
+				   else if(resultArr3[k] == "Exception Thrown")
+					   numExceptions++;
+			   }
+			   // print summary from random invalid ipv4 call to isValidAuthoirty
+			   System.out.println();
+			   System.out.println("\tSummary of results for random VALID ipv6 called to isValidInet6Addres(): \n");
+			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
+			   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+			   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+			   
+			   numTrue = 0;
+			   numFalse = 0; 
+			   numExceptions = 0; 
+			   
+			   for(int k = 0; k < 1000; k++)
+			   {
+				   if(resultArr4[k] == "true")
+					   numTrue++;
+				   else if(resultArr4[k] == "false")
+					   numFalse++;
+				   else if(resultArr4[k] == "Exception Thrown")
+					   numExceptions++;
+			   }
+			   // print summary from random invalid ipv4 call to isValidAuthoirty
+			   System.out.println();
+			   System.out.println("\tSummary of results for random INVALID ipv6 called to isValidInet6Addres(): \n");
+			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
+			   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+			   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+			   
+		   }
+		   catch(Throwable t)
+		   {
+			   System.out.println("\t\tFAIL: Error in InetAddressValidator.getInstance()");
+			   System.out.println("\t\tUnable to evaluate ANY ipv4 or ipv6 due to above error \n");
+		   }
+	      
+		  
+		   // Create teststructs to test ipv with isValid() call
+		   String prePort = "ftp://";
+		   String postPort = "/test1";
+		   
+		   teststruct TestArr1[] = new teststruct[2000];
+		   teststruct TestArr2[] = new teststruct[2000];
+		   teststruct TestArr3[] = new teststruct[1000];
+		   teststruct TestArr4[] = new teststruct[1000];
+		   
+		   for (int i = 0; i < 2000; i++)
+		   {
+			   TestArr1[i] = new teststruct();
+			   TestArr1[i].url = prePort + validIPV4[i] + postPort; 
+			   TestArr1[i].expect = true;
+		   }
+		   for (int i = 0; i < 2000; i++)
+		   {
+			   TestArr2[i] = new teststruct();
+			   TestArr2[i].url = prePort + invalidIPV4[i] + postPort; 
+			   TestArr2[i].expect = false;
+		   }
+		   for (int i = 0; i < 1000; i++)
+		   {
+			   TestArr3[i] = new teststruct();
+			   TestArr3[i].url = prePort + validIPV6[i] + postPort; 
+			   TestArr3[i].expect = true;
+		   }
+		   for (int i = 0; i < 1000; i++)
+		   {
+			   TestArr4[i] = new teststruct();
+			   TestArr4[i].url = prePort + invalidIPV6[i] + postPort; 
+			   TestArr4[i].expect = true;
+		   }
+
+		   // NOW CALL isValid() with various test structs
+		   for (int j = 0; j < 2000; j++)
+		   {
+			   try
+			   {
+				   boolean result = urlValRandPorts.isValid(TestArr1[j].url);
+				   TestArr1[j].crash = false;
+				   TestArr1[j].isValidReturn = result; 
+				   if(TestArr1[j].expect == TestArr1[j].isValidReturn)
+					   TestArr1[j].pass = true;
+				   else
+					   TestArr1[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr1[j].crash = true;
+			   }
+
+		   }
+		   for (int j = 0; j < 2000; j++)
+		   {
+			   try
+			   {
+				   boolean result = urlValRandPorts.isValid(TestArr2[j].url);
+				   TestArr2[j].crash = false;
+				   TestArr2[j].isValidReturn = result; 
+				   if(TestArr2[j].expect == TestArr2[j].isValidReturn)
+					   TestArr2[j].pass = true;
+				   else
+					   TestArr2[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr2[j].crash = true;
+			   }
+
+		   }
+		   for (int j = 0; j < 1000; j++)
+		   {
+			   try
+			   {
+				   boolean result = urlValRandPorts.isValid(TestArr3[j].url);
+				   TestArr3[j].crash = false;
+				   TestArr3[j].isValidReturn = result; 
+				   if(TestArr3[j].expect == TestArr3[j].isValidReturn)
+					   TestArr3[j].pass = true;
+				   else
+					   TestArr3[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr3[j].crash = true;
+			   }
+
+		   }
+		   for (int j = 0; j < 1000; j++)
+		   {
+			   try
+			   {
+				   boolean result = urlValRandPorts.isValid(TestArr4[j].url);
+				   TestArr4[j].crash = false;
+				   TestArr4[j].isValidReturn = result; 
+				   if(TestArr4[j].expect == TestArr4[j].isValidReturn)
+					   TestArr4[j].pass = true;
+				   else
+					   TestArr4[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr4[j].crash = true;
+			   }
+
+		   }
+		   
+		   
+		   // Print results to file
+		   
+		   
+		   //teststruct.printResults(TestArr1);
+		   System.out.println("\tSee full results in 'Random_Test_Valid_IPV4.txt'");
+		   teststruct.printResultsToFile(TestArr1, "Random_Test_Valid_IPV4.txt", "Random Valid IPV4 Ports Test");
+		   
+		   //teststruct.printResults(TestArr2);
+		   System.out.println("\tSee full results in 'Random_Test_Inalid_IPV4.txt'");
+		   teststruct.printResultsToFile(TestArr2, "Random_Test_Invalid_IPV4.txt", "Random Inalid IPV4 Ports Test");
+		   
+		   //teststruct.printResults(TestArr3);
+		   System.out.println("\tSee full results in 'Random_Test_Valid_IPV6.txt'");
+		   teststruct.printResultsToFile(TestArr3, "Random_Test_Valid_IPV6.txt", "Random Valid IPV6 Ports Test");
+		   
+		   //teststruct.printResults(TestArr4);
+		   System.out.println("\tSee full results in 'Random_Test_Inalid_IPV6.txt'");
+		   teststruct.printResultsToFile(TestArr4, "Random_Test_Invalid_IPV6.txt", "Random Invalid IPV6 Ports Test");
+		   
+		   // compare the results to elucidate additional contextual influences
+		   String s1 = "Valid ipv4";
+		   String s2 = "Invalid ipv4";
+		   
+		   // Prints all 2000 results compared
+		   System.out.println("\tSee output file 'Random_Testing_IPV4_Comparative.txt' for ");
+		   System.out.println("\tcomparative analysis between valid and invalid IPV4 calls\n");
+		   String testName = "Comparing Valid and InValid IPV4 Results";
+		   teststruct.printCompareTestStructArraysToFile(TestArr1, TestArr2, s1, s2, "Random_Testing_IPV4_Comparative.txt", testName);
+		   
+		   // compare the results to elucidate contextual influences
+		   String s3 = "Valid ipv6";
+		   String s4 = "Invalid ipv6";
+		   
+		   // Prints all 1000 results compared
+		   System.out.println("\tSee output file 'Random_Testing_IPV6_Comparative.txt' for ");
+		   System.out.println("\tcomparative analysis between valid and invalid IPV6 calls\n");
+		   testName = "Comparing Valid and InValid IPV6 Results";
+		   teststruct.printCompareTestStructArraysToFile(TestArr3, TestArr4, s3, s4, "Random_Testing_IPV6_Comparative.txt", testName);
+		   
    }
    
    // POSSIBLE OTHER UNIT TESTS DEPENDING ON DANEIL'S TESTS

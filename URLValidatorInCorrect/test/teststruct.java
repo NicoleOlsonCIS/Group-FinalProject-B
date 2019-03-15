@@ -17,6 +17,11 @@ public class teststruct
 	// public static void means no need for an object 
 	static void printResults(teststruct arr[])
 	{
+		// counting mechanism
+		int numPassed = 0;
+		int numFailed = 0;
+		int numCrashed = 0;
+		
 		
 		System.out.println("PRINTING TEST OUTCOMES: \n");
 		
@@ -29,6 +34,7 @@ public class teststruct
 				System.out.print(": CRASHED on url: ");
 				System.out.println(arr[i].url);
 				System.out.println();
+				numCrashed++;
 				continue;
 			}
 			
@@ -40,12 +46,24 @@ public class teststruct
 			System.out.println(arr[i].isValidReturn);
 			System.out.print("Summary: ");
 			if(arr[i].pass == true)
+			{
 				System.out.println("PASS");
+				numPassed++;
+			}
 			else
+			{
 				System.out.println("FAIL");
-			
+				numFailed++;
+			}
+				
 			System.out.println();
 		}
+		
+		System.out.println("SUMMARY: ");
+		System.out.println("\t Pass:  " + numPassed);
+		System.out.println("\t Fail: " + numFailed);
+		System.out.println("\t Crash: " + numCrashed);
+		
 	}
 	
 	
@@ -214,9 +232,15 @@ public class teststruct
 	// WORK IN PROGRESS
 	public static void printResultsToFile(teststruct arr[], String filename, String testName) 
 	{
+		// counting 
+		int numPassed = 0;
+		int numFailed = 0;
+		int numCrashed = 0;
+		
 		Vector<String> v = new Vector<>();
 		
-		v.add("Printing test outcomes for " + testName + "\n\n\n");
+		v.add("Printing test outcomes for " + testName + "\n");
+		v.add("(Scroll to bottom for Pass/Fail/Crash totals)\n\n\n");
 		
 		//System.out.println("PRINTING TEST OUTCOMES: \n");
 		
@@ -228,7 +252,8 @@ public class teststruct
 			
 			if(arr[i].crash == true)
 			{
-				v.add(": CRASHED o url:" + arr[i].url + "\n\n");
+				v.add(": CRASHED on url:" + arr[i].url + "\n\n");
+				numCrashed++;
 				continue;
 			}
 			
@@ -238,13 +263,21 @@ public class teststruct
 			v.add("Summary: ");
 			
 			if(arr[i].pass == true)
-				v.add("FAIL\n");
+			{
+				v.add("PASS\n");
+				numPassed++;
+			}
 			else
+			{
 				v.add("FAIL\n");
-			
-			System.out.println();
+				numFailed++;
+			}
 		}
 		
+		v.add("\n\nSUMMARY: \n");
+		v.add("\t Pass:  " + numPassed + "\n");
+		v.add("\t Fail: " + numFailed + "\n");
+		v.add("\t Crash: " + numCrashed + "\n");
 		
 		// file io in java citation: https://beginnersbook.com/2014/01/how-to-write-to-a-file-in-java-using-fileoutputstream/
 		
