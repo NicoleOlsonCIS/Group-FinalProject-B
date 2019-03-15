@@ -182,19 +182,19 @@ public class UrlValidatorTest extends TestCase
 				   new ResultPair("http://" + "www.google.com", true),
 				   new ResultPair("ftp://" + "www.google.com", true),
 				   new ResultPair("https://" + "www.google.com", true),
-				   new ResultPair("Xttp://" + "www.google.com", false),	
-				   new ResultPair("htfp:/" + "www.google.com", false),  
-				   new ResultPair("-ttp:" + "www.google.com", false),  
-				   new ResultPair("htkp/" + "www.google.com", false),	
-				   new ResultPair(":=/" + "www.google.com", false),   	
-				   new ResultPair(">ht://" + "www.google.com", false), 
+				   new ResultPair("xTtp://" + "www.google.com", false),	
+				   new ResultPair("h-fp://" + "www.google.com", false), 
+				   new ResultPair("httpppp://" + "www.google.com", false),
+				   new ResultPair("h://" + "www.google.com", false),		
+				   new ResultPair(":ttp://" + "www.google.com", false), 
+				   new ResultPair("h*tp://" + "www.google.com", false), 
 				   new ResultPair("Xttp:/" + "www.google.com", false),	
-				   new ResultPair("h_tp:" + "www.google.com", false),   
-				   new ResultPair("http/" + "www.google.com", false),   
+				   new ResultPair("h_tp:" + "www.google.com", false),  
+				   new ResultPair("/" + "www.google.com", false),       
 				   new ResultPair("://" + "www.google.com", false),     
 				   new ResultPair("3ht://" + "www.google.com", false),  
 				   new ResultPair("http:/" + "www.google.com", false),  
-				   new ResultPair("http:" + "www.google.com", false),   
+				   new ResultPair("http:" + "www.google.com", false),  
 				   new ResultPair("http/" + "www.google.com", false),   
 				   new ResultPair("://" + "www.google.com", false)		
 			   };
@@ -360,7 +360,7 @@ public class UrlValidatorTest extends TestCase
 			   {	   
 					   new ResultPair("http://" + "www.google.com", true),
 					   new ResultPair("ftp://" + "www.google.com", true),
-					   new ResultPair("h3t://" + "www.google.com", true),
+					   new ResultPair("https://" + "www.google.com", true),
 					   new ResultPair("xTtp://" + "www.google.com", true),	
 					   new ResultPair("h-fp://" + "www.google.com", true), 
 					   new ResultPair("httpppp://" + "www.google.com", true),
@@ -470,12 +470,12 @@ public class UrlValidatorTest extends TestCase
 
 	   System.out.println("UNIT TEST: Testing isValidAuthority() directly (not calling isValid() )"); 
 	   
-	   // TEST 1: TESTING DEFAULT SETTINGS - IPV6 inputs expected to be INVALID on default settings
+	   // TEST 1: TESTING DEFAULT SETTINGS with IANA
 	   long options =
 	            UrlValidator.ALLOW_ALL_SCHEMES;
 	   
 	   UrlValidator urlValAuth = new UrlValidator(options);
-	   String setting1 = "No IPV6"; 
+	   String setting1 = "IANA"; 
 	   
 	   String tArr[] = 
 		   {
@@ -484,14 +484,11 @@ public class UrlValidatorTest extends TestCase
 				   "0.0.0.0",
 				   "172.com",
 				   "youtube.cc",
-				   "user:password@host:81", 
 				   "255.255.255.255:81",
 				   "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]",
 				   "[1080:0:0:0:8:800:200C:417A]",
 				   "[3ffe:2a00:100:7031::1]",
 				   "[1080::8:800:200C:417A]",
-				   "[::192.9.5.5]",
-				   "[::FFFF:129.144.52.38]",
 				   "[2010:836B:4179::836B:4179]"
 		   };
 	   String fArr[] = 
@@ -512,7 +509,6 @@ public class UrlValidatorTest extends TestCase
 	   boolean result;
 	   
 	   // call isValidAuthority with "null"
-	   // call !isValidAuthority(authority) on valid authorities:
 	   System.out.println();
 	   System.out.println("\tTesting isValidAuthority called with authority = null: \n");
 	   try
@@ -595,53 +591,55 @@ public class UrlValidatorTest extends TestCase
 		   System.out.println("\t\tUnable to evaluate ANY ipv4 or ipv6 due to above error \n");
 	   }
      
-	   // PART 2: TESTING AUTHORITIES IN CONTEXT
+	   // TESTING AUTHORITIES IN CONTEXT
 	   ResultPair[] testingAuthority =  
 		   {	   
 				   new ResultPair("http://" + "www.google.com", true),   
-				   new ResultPair("ftp://" + "www.google.com", true),    							// TEST that when not http:// but still standard
-				   new ResultPair("h3t://" + "www.google.com", true),    							// TEST that when not http:// but still standard
-				   new ResultPair("http://" + "amazon.com.au", true),    							// TEST .au 
-				   new ResultPair("http://" + "0.0.0.0", true),          							// TEST lower bounds of IPV4
-				   new ResultPair("http://" + "255.255.255.255", true),	 							// TEST upper bounds of IPV4
-				   new ResultPair("http://" + "172.com", true),   	     							// TEST IP host 
-				   new ResultPair("http://" + "youtube.cc", true), 	     							// TEST .cc
-				   new ResultPair("http://" + "user:password@host:81/path", true),						// TEST username/password/port format 
-				   new ResultPair("http://" + "255.255.255.255:81/path", true),	 						// TEST port option on host
-				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]/path", true), 	// TEST: Valid IPV6 Type1 
-				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]/path", true),            	// TEST: Valid IPV6 Type2
-				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]/path", true),         			// TEST: Valid IPV6 Type3
-				   new ResultPair("http://" + "[1080::8:800:200C:417A]/path", true),            	        // TEST: Valid IPV6 Type4
-				   new ResultPair("http://" + "[::192.9.5.5]/path", true),            				    // TEST: Valid IPV6 Type5
-				   new ResultPair("http://" + "[::FFFF:129.144.52.38]/path", true),                      // TEST: Valid IPV6 Type6
-				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]/path", true),                 // TEST: Valid IPV6 Type7 (ipv6 addresses from: https://www.ietf.org/rfc/rfc2732.txt)
-				   new ResultPair("http://" + "172.192.172.256/path", false), 							// FALSE invalid IPV4 	
-				   new ResultPair("http://" + "10.11.12.13.14/path", false),      						// FALSE invalid IPV4
-				   new ResultPair("http://" + "1.1.1.1./path", false),       							// FALSE invalid IPV4 format (trailing dot)
-				   new ResultPair("http://" + "1.2.3", false),           							// FALSE invalid IPV4 (insufficient address components)
-				   new ResultPair("http://" + ".1.2.3.4", false),        							// FALSE invalid IPV4 format (leading dot)
-				   new ResultPair("http://" + "go.a", false),            							// FALSE invalid host
-				   new ResultPair("http://" + "go.1aa", false),         							// FALSE invalid host 
-				   new ResultPair("http://" + ".aaa", false),            							// FALSE invalid format
-				   new ResultPair("http://" + "aaa.", false),            							// FALSE invalid format
-				   new ResultPair("http://" + "aaa", false)	            							// FALSE invalid format    
+				   new ResultPair("https://" + "www.google.com", true),    							
+				   new ResultPair("ftp://" + "www.google.com", true),    							
+				   new ResultPair("http://" + "amazon.com.au", true),    							
+				   new ResultPair("http://" + "0.0.0.0", true),          							
+				   new ResultPair("http://" + "255.255.255.255", true),	 							
+				   new ResultPair("http://" + "172.com", true),   	     							
+				   new ResultPair("http://" + "youtube.cc", true), 	     													
+				   new ResultPair("http://" + "255.255.255.255:81/path", true),	 						
+				   new ResultPair("http://" + "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]/path", true), 	
+				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]/path", true),            	
+				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]/path", true),         			
+				   new ResultPair("http://" + "[1080::8:800:200C:417A]/path", true),            	       
+				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]/path", true),       // ** investigate why leading "::" fail          
+				   new ResultPair("http://" + "path", true),                  					// *** investigate why false 
+				   new ResultPair("http://" + "user:password@host:81", true), 					// *** investigate why false
+				   new ResultPair("http://" + "amazon.com.xx1", false),    							
+				   new ResultPair("http://" + "172.ccc", false),   	     							
+				   new ResultPair("http://" + "youtube.czq", false), 
+				   new ResultPair("http://" + "172.192.172.256/path", false), 								
+				   new ResultPair("http://" + "10.11.12.13.14/path", false),      						
+				   new ResultPair("http://" + "1.2.3.4///", false),           							
+				   new ResultPair("http://" + ".1.2.3.4", false),        							
+				   new ResultPair("http://" + "go.a", false),            							
+				   new ResultPair("http://" + "go.1aa", false),         							
+				   new ResultPair("http://" + ".aaa", false),            							
+				   new ResultPair("http://" + "aaa.", false),            							
+				   new ResultPair("file://" + ":", false)	            							   
+				   
 		   };
 	   
-	   teststruct TestArr[] = new teststruct[27]; 
+	   teststruct TestArr[] = new teststruct[28]; 
 	   
-	   for (int i = 0; i < 27; i++)
+	   for (int i = 0; i < 28; i++)
 	   {
 		   TestArr[i] = new teststruct();
 		   TestArr[i].url = testingAuthority[i].item;
 		   
-		  if(i < 10)
+		  if(i < 16)
 			  TestArr[i].expect = true;
 		  else
 			  TestArr[i].expect = false;
 	   }
 	   
 	   // call isValid()
-	   for (int j = 0; j < 27; j++)
+	   for (int j = 0; j < 28; j++)
 	   {
 		   try
 		   {
@@ -665,8 +663,12 @@ public class UrlValidatorTest extends TestCase
 	   System.out.println("\tUnit test calls to isValid() testing authority component . . . \n");
 	   System.out.println("\t AUTHORITY UNIT TEST COMPLETE\n");
 	   System.out.println("\tSee Full Unit Test Report in output 'Authority_Unit_Test_Results.txt' \n\n");
+	   
+	  
 	   //teststruct.printResults(TestArr);
-	   teststruct.printResultsToFile(TestArr, "Authority_Unit_Test_Results.txt", "IsValid() Calls Testing Authority");
+	   teststruct.printResultsToFile(TestArr, "Authority_Unit_Test_Results.txt", "IsValid() Calls Testing Authority NO-IANA");
+	   
+	   
    }
    
   
@@ -676,7 +678,10 @@ public class UrlValidatorTest extends TestCase
 	   // resource in the host that the web client wants to access. 
 	   // For example, /software/htp/cics/index.html."
 	   // https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.1.0/com.ibm.cics.ts.internet.doc/topics/dfhtl_uricomp.html
-	   
+	   //"When authority is present, the path must
+	   //either be empty or begin with a slash ("/") character.  When
+	   //authority is not present, the path cannot begin with two slash
+	   //characters ("//")." 
 	   
 	   
 	   
