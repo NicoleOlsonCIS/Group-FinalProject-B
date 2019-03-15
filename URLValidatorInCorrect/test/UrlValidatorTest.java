@@ -112,8 +112,7 @@ public class UrlValidatorTest extends TestCase
 	   boolean ftpError = false;
 	   
 	   
-	   System.out.println("\tTesting initialization of allowable schemes: http, https, ftp\n");
-	   System.out.println("\tCall to isValidScheme() directly (not inValid())\n");
+	   System.out.println("\tTesting constructor initialization of allowable schemes: http, https, ftp\n");
 	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal.isValidScheme("http"))
@@ -121,6 +120,8 @@ public class UrlValidatorTest extends TestCase
 		   System.out.print("\t\thttp: FAIL\n");
 		   httpError = true;
 	   }
+	   else if(urlVal.isValidScheme("http"))
+		   System.out.print("\t\thttp: PASS\n");
 	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal.isValidScheme("https"))
@@ -128,19 +129,28 @@ public class UrlValidatorTest extends TestCase
 		   System.out.print("\t\thttps: FAIL\n");
 		   httpsError = true;
 	   }
+	   else if(urlVal.isValidScheme("https"))
+		   System.out.print("\t\thttps: PASS\n");
 		  
 	   // TEST isValidScheme call in context of instantiated UrlValidator
-	   if (!urlVal.isValidScheme("https"))
+	   if (!urlVal.isValidScheme("ftp"))
 	   {
 		   System.out.print("\t\tftp: FAIL\n");
 		   ftpError = true;
 	   }
+	   else if(urlVal.isValidScheme("ftp"))
+		   System.out.print("\t\tftp: PASS\n");
 		  
 	   if(!(httpError || httpsError || ftpError))
 	   {
+		   // Trace Statements for debugging
+		   // System.out.println();
+		   // System.out.println("\tCross references of scheme validity in context:");
+		   // System.out.println("\tTesting above scheme validity in context of isValid() call: \n\n");
+		   
 		   System.out.println();
-		   System.out.println("\tCross references of scheme validity in context:");
-		   System.out.println("\tTesting above scheme validity in context of isValid() call: \n\n");
+		   System.out.println("\tUnit test calls to isValid() for schemes http, https, ftp runing . . . \n");
+		   
 		   test1Run = true;
 		   boolean preliminary;
 		   setting1 = "Only: http/https/ftp"; 
@@ -160,8 +170,8 @@ public class UrlValidatorTest extends TestCase
 			   {	   
 				   new ResultPair("http://" + "www.google.com", true),
 				   new ResultPair("ftp://" + "www.google.com", true),
-				   new ResultPair("h3t://" + "www.google.com", true),
-				   new ResultPair("Xttp://" + "www.google.com", true),	
+				   new ResultPair("https://" + "www.google.com", true),
+				   new ResultPair("Xttp://" + "www.google.com", false),	
 				   new ResultPair("htfp:/" + "www.google.com", false),  
 				   new ResultPair("-ttp:" + "www.google.com", false),  
 				   new ResultPair("htkp/" + "www.google.com", false),	
@@ -182,7 +192,7 @@ public class UrlValidatorTest extends TestCase
 		   {
 			   TestArr[i] = new teststruct();
 			   TestArr[i].url = testingScheme[i].item;
-			   if(i < 4) // CHANGE THIS
+			   if(i < 3) // CHANGE THIS
 				   TestArr[i].expect = true; 
 			   else
 				   TestArr[i].expect = false; 
@@ -210,7 +220,7 @@ public class UrlValidatorTest extends TestCase
 
 		   }
 		   
-		
+		   System.out.println("\tSCHEME UNIT TEST 1 COMPLETE \n");
 		   System.out.println("\tSee full results in 'Scheme_Unit_Test1.txt''\n\n");
 		   teststruct.printResultsToFile(TestArr, "Scheme_Unit_Test1.txt", "SchemeTest1");
 
@@ -239,12 +249,16 @@ public class UrlValidatorTest extends TestCase
 	   
 	   UrlValidator urlVal2 = new UrlValidator(options);
 	   
+	   System.out.println("\tTesting constructor initialization of ALLOW_ALL_SCHEMES\n");
+	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal2.isValidScheme("http"))
 	   {
 		   System.out.print("\t\thttp: FAIL;");
 		   httpErrorB = true;
 	   }
+	   else if(urlVal2.isValidScheme("http"))
+		   System.out.print("\t\thttp: PASS\n");  
 	   
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal2.isValidScheme("https"))
@@ -252,6 +266,8 @@ public class UrlValidatorTest extends TestCase
 		   System.out.print("\t\thttps: FAIL \n");
 		   httpsErrorB = true;
 	   }
+	   else if(urlVal2.isValidScheme("https"))
+		   System.out.print("\t\thttps: PASS\n"); 
 		  
 	   // TEST isValidScheme call in context of instantiated UrlValidator
 	   if (!urlVal2.isValidScheme("ftp"))
@@ -259,12 +275,16 @@ public class UrlValidatorTest extends TestCase
 		   System.out.print("\t\tftp: FAIL \n");
 		   ftpErrorB = true;
 	   }
+	   else if(urlVal2.isValidScheme("ftp"))
+		   System.out.print("\t\tftp: PASS\n");
 		  
 	   if(!urlVal2.isValidScheme("Xttp"))
 	   {
 		   System.out.print("\t\tXttp: FAIL \n");
 		   XttpError = true;
 	   }
+	   else if(urlVal2.isValidScheme("Xttp"))
+		   System.out.print("\t\tXttp: PASS\n");
 	   
 	   String fArr[] = 
 		   {
@@ -278,17 +298,26 @@ public class UrlValidatorTest extends TestCase
 	   {
 		   if(urlVal2.isValidScheme(fArr[k]))
 		   {
-			   System.out.print("		" + fArr[k] + "FAIL \n");
+			   System.out.print("\t\t" + fArr[k] + ": FAIL \n");
 			   fError = true;
 		   }
+		   else if(!urlVal2.isValidScheme(fArr[k]))
+			   System.out.print("\t\t" + fArr[k] + " PASS \n");
 	   }
+	   
+	   System.out.println();
 	   
 	   // if things that are supposed to be true evaluate to false, do not context tests
 	   if(!(httpErrorB || httpsErrorB || ftpErrorB || XttpError || fError))
 	   {
-		   System.out.println();
-		   System.out.println("\tCross references of scheme validity in context:");
-		   System.out.println("\tTesting ALLOW_ALL_SCHEME validity in context of isValid() call: \n\n");
+		   
+		   System.out.println("\tUnit test calls to isValid() for ALLOW_ALL_SCHEMES . . . \n");
+		   
+		   // for debugging
+		   // System.out.println();
+		   // System.out.println("\tCross references of scheme validity in context:");
+		   // System.out.println("\tTesting ALLOW_ALL_SCHEME validity in context of isValid() call: \n\n");
+		   
 		   test2Run = true;
 		   try 
 		   {
@@ -371,7 +400,8 @@ public class UrlValidatorTest extends TestCase
 		   }
 		   
 		   //teststruct.printResults(TestArr2);
-		   System.out.println("\tSee full results in 'Scheme_Unit_Test2.txt'");
+		   System.out.println("\t SCHEME UNIT TEST 2 COMPLETE \n");
+		   System.out.println("\tSee full results in 'Scheme_Unit_Test2.txt'\n");
 		   teststruct.printResultsToFile(TestArr2, "Scheme_Unit_Test2.txt", "SchemeTest2");
 		   
 	   }
@@ -388,7 +418,7 @@ public class UrlValidatorTest extends TestCase
 	   // if we ran both full tests, we can compare the results
 	   if(test1Run && test2Run)
 	   {
-		   System.out.println("Comparison of Scheme options test results in output 'CompareSchemeSettingsTest.txt'\n\n");
+		   System.out.println("\tComparison of Scheme options test results in output 'CompareSchemeSettingsTest.txt'\n\n");
 		   // NOW COMPARE THE TWO TESTS STRUCT ARRAY RESULTS 
 		   //teststruct.compareTestStructArrays(TestArr, TestArr2, setting1, setting2);
 		   teststruct.printCompareTestStructArraysToFile(TestArr, TestArr2, setting1, setting2, "CompareSchemeSettingsTest.txt", "Compare Scheme Settings Test");
@@ -620,6 +650,9 @@ public class UrlValidatorTest extends TestCase
 
 	   }
 	   
+	   System.out.println();
+	   System.out.println("\tUnit test calls to isValid() testing authority component . . . \n");
+	   System.out.println("\t AUTHORITY UNIT TEST COMPLETE\n");
 	   System.out.println("\tSee Full Unit Test Report in output 'Authority_Unit_Test_Results.txt' \n\n");
 	   //teststruct.printResults(TestArr);
 	   teststruct.printResultsToFile(TestArr, "Authority_Unit_Test_Results.txt", "IsValid() Calls Testing Authority");
