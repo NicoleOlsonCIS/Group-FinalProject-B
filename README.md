@@ -25,7 +25,11 @@ TO DO:
 Manual Testing could be written again, the one there was just a draft to get going with the code ... (~1-hours)
 
 testPath()
+<<<<<<< HEAD
     Unit test of Path(note options settings - allow two slashes, fragments)
+=======
+    Unit test of Path(note options settings - allow two slashes) (~2-hours, use structures in place and follow method of testing in other unit tests)
+>>>>>>> 36bb9ed4326656c345aa53f90372f4b7b0d61639
 
 testQuery()
     Unit test of Query
