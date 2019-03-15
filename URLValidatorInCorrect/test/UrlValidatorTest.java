@@ -816,7 +816,6 @@ public class UrlValidatorTest extends TestCase
 
 	   }
 	   // NOW CALL isValid() with the invalid ports
-	   // NOW CALL isValid() with the same ports (starting with valid ports)
 	   for (int j = 0; j < 2000; j++)
 	   {
 		   try
