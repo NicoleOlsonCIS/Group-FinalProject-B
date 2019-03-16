@@ -683,11 +683,241 @@ public class UrlValidatorTest extends TestCase
 	   //authority is not present, the path cannot begin with two slash
 	   //characters ("//")." 
 	   
-	   
-	   
 	   //System.out.println();
 	   //System.out.println("UNIT TEST: Testing isValidPath() call in isValid()"); 
 	   
+	   String setting1 = "Double Slashes-No Fragments"; 
+	   String setting2 = "Single Slash Only - Fragments Allowed";
+	   boolean check1 = false;
+	   boolean check2 = false;
+	   boolean check3 = false;
+	   boolean check4 = false;
+	   boolean ran1 = false;
+	   boolean ran2 = false;
+
+       teststruct TestArr[] = new teststruct[11]; 
+       teststruct TestArr2[] = new teststruct[11]; 
+	   
+	   // PART 1: Testing Double Slashes Allowed No Fragments Allowed
+	   long options =
+	            UrlValidator.ALLOW_ALL_SCHEMES
+                + UrlValidator.ALLOW_2_SLASHES
+                + UrlValidator.NO_FRAGMENTS;
+	   
+	   UrlValidator urlValPath = new UrlValidator(options);
+	   
+	   System.out.println("\tTesting constructor initialization and direct calls to isValidPath()\n");
+	   
+	   if (!urlValPath.isValidPath("/index.html"))
+	   {
+		   System.out.print("\t\t/index.html: FAIL\n");
+		   check1 = true;
+	   }
+	   else if(urlValPath.isValidPath("/index.html"))
+		   System.out.print("\t\t/index.html: PASS\n");
+	   
+	  
+	   if (!urlValPath.isValidPath("/path//index.html"))
+	   {
+		   System.out.print("\t\t/path//index.html: FAIL\n");
+		   check2 = true;
+	   }
+	   else if(urlValPath.isValidPath("/path//index.htm"))
+		   System.out.print("\t\t/path//index.htm: PASS\n");
+		  
+	   
+	   if (urlValPath.isValidPath("/../index.html"))
+	   {
+		   System.out.print("\t\t/../index.html: FAIL\n");
+		   check3 = true;
+	   }
+	   else if(!urlValPath.isValidPath("/../index.html"))
+		   System.out.print("\t\t/../index.html: PASS\n");
+	   
+	   if (urlValPath.isValidPath("/index.html#fragment.html"))
+	   {
+		   System.out.print("\t\t/index.html#fragment: FAIL\n");
+		   check4 = true;
+	   }
+	   else if(!urlValPath.isValidPath("/../index.html#fragment"))
+		   System.out.print("\t\t/index.html#fragment: PASS\n");
+	   
+	   
+	   // only if we pass all the direct calls to isValidPath()
+	   if(!(check1 || check2 || check3 || check4))
+	   {
+		   ran1 = true; 
+		   
+		   System.out.println("\t .... \n");
+		   
+		   ResultPair[] testingPath =  
+			   {	   
+					   new ResultPair("http://www.google.com" + "", true),   							// with null path
+					   new ResultPair("http://www.google.com" + "/", true),								// with trailing / 
+					   new ResultPair("index.html", true),												// with null authority no // for path
+					   new ResultPair("http://www.google.com" + "/index.html", true),         			// Valid for both 
+					   new ResultPair("http://www.google.com" + "/word/index.html", true),    			// Valid for both       							
+					   new ResultPair("http://www.google.com" + "/word//index.html", true),   			// allow two slashes (False in part 2 only) 	
+					   new ResultPair("http://www.google.com" + "/index.html#fragment", false), 		// False on part 1 
+					   new ResultPair("http://www.google.com" + "/word//index.html#fragment", false),	// allow two slashes (False in part 1 and 2)   							     							
+					   new ResultPair("http://www.google.com" + "/../", false),							// false in both parts 	 							
+					   new ResultPair("http://www.google.com" + "/../index.html", false),				// false in both parts   
+					   new ResultPair("http://www.google.com" + "/#/index.html", false),				// false in both parts     							
+
+			   };
+		   
+		   for (int i = 0; i < 11; i++)
+		   {
+			   TestArr[i] = new teststruct();
+			   TestArr[i].url = testingPath[i].item;
+			   if(i < 6) 
+				   TestArr[i].expect = true; 
+			   else
+				   TestArr[i].expect = false; 
+		   }
+		   
+		   // call isValid()
+		   boolean result;
+		   for (int j = 0; j < 11; j++)
+		   {
+			   try
+			   {
+				   result = urlValPath.isValid(TestArr[j].url);
+				   TestArr[j].crash = false;
+				   TestArr[j].isValidReturn = result; 
+				   if(TestArr[j].expect == TestArr[j].isValidReturn)
+					   TestArr[j].pass = true;
+				   else
+					   TestArr[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr[j].crash = true;
+			   }
+
+		   }
+		   
+		   System.out.println("\tPATH UNIT TEST 1 COMPLETE \n");
+		   System.out.println("\tSee full results in 'Path_Unit_Test1.txt''\n\n");
+		   teststruct.printResultsToFile(TestArr, "Path_Unit_Test1.txt", "PathTest1");
+		   
+	   }
+	   
+	   else
+	   {
+		   System.out.println("\tFull Path Unit Test not run due to preliminary validation bugs detected \n");
+	   }
+
+	   
+	   
+	   // PART 2: No double slash, fragments allowed (default constructor)
+	   long options2 =
+	            UrlValidator.ALLOW_ALL_SCHEMES;
+
+	   check1 = false;
+	   check2 = false;
+	   check3 = false;
+	   check4 = false;
+	   
+	   UrlValidator urlValPath2 = new UrlValidator(options2);
+	   
+	   System.out.println("\tTesting constructor initialization and direct calls to isValidPath() no double slash, fragments allowed\n");
+	   
+	   if (!urlValPath.isValidPath("/index.html"))
+	   {
+		   System.out.print("\t\t/index.html: FAIL\n");
+		   check1 = true;
+	   }
+	   else if(urlValPath.isValidPath("/index.html"))
+		   System.out.print("\t\t/index.html: PASS\n");
+	   
+	   if (!urlValPath.isValidPath("/path//index.html"))
+	   {
+		   System.out.print("\t\tpath//index.html: FAIL\n");
+		   check2 = true;
+	   }
+	   else if(urlValPath.isValidPath("/path//index.htm"))
+		   System.out.print("\t\tpath//index.htm: PASS\n");
+	   
+	   if (!urlValPath.isValidPath("/site//index.html"))
+	   {
+		   System.out.print("\t\t/site//index.html: FAIL\n");
+		   check3 = true;
+	   }
+	   else if(urlValPath.isValidPath("/site//index.html"))
+		   System.out.print("\t\t/site//index.html: PASS\n");
+	   
+	   // only if we pass all the direct calls to isValidPath()
+	   if(!(check1 || check2 || check3 ))
+	   {
+		   ran2 = true; 
+		   
+		   System.out.println("\t .... \n");
+		   
+		   ResultPair[] testingPath2 =  
+			   {	   
+					   new ResultPair("http://www.google.com" + "", true),   							// [0] with null path
+					   new ResultPair("http://www.google.com" + "/", true),								// [1] with trailing / 
+					   new ResultPair("index.html", true),									// [2] with null authority no // for path
+					   new ResultPair("http://www.google.com" + "/index.html", true),         			// [3] Valid for both 
+					   new ResultPair("http://www.google.com" + "/word/index.html", true),    			// [4] Valid for both       							
+					   new ResultPair("http://www.google.com" + "/word//index.html", false),   			// [5] allow two slashes (False in part 2 only) 	
+					   new ResultPair("http://www.google.com" + "/index.html#fragment", true), 	    	// [6] False on part 1 
+					   new ResultPair("http://www.google.com" + "/word//index.html#fragment", false),	// [7] allow two slashes (False in part 1 and 2)   							     							
+					   new ResultPair("http://www.google.com" + "/../", false),							// [8] false in both parts 	 							
+					   new ResultPair("http://www.google.com" + "/../index.html", false),				// [9] false in both parts   
+					   new ResultPair("http://www.google.com" + "/#/index.html", true),		    		// [10] false in both parts     							
+
+			   };
+		   
+		   for (int i = 0; i < 11; i++)
+		   {
+			   TestArr2[i] = new teststruct();
+			   TestArr2[i].url = testingPath2[i].item;
+			   if(i < 7 && i != 5 || i == 10) 
+				   TestArr2[i].expect = true; 
+			   else
+				   TestArr2[i].expect = false; 
+		   }
+		   
+		   // call isValid()
+		   boolean result;
+		   for (int j = 0; j < 11; j++)
+		   {
+			   try
+			   {
+				   result = urlValPath2.isValid(TestArr2[j].url);
+				   TestArr2[j].crash = false;
+				   TestArr2[j].isValidReturn = result; 
+				   if(TestArr2[j].expect == TestArr2[j].isValidReturn)
+					   TestArr2[j].pass = true;
+				   else
+					   TestArr2[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr2[j].crash = true;
+			   }
+
+		   }
+		   
+		   System.out.println("\tPATH UNIT TEST 2 COMPLETE \n");
+		   System.out.println("\tSee full results in 'Path_Unit_2Test1.txt''\n\n");
+		   teststruct.printResultsToFile(TestArr, "Path_Unit_Test2.txt", "PathTest2");   
+	   } 
+	   else
+	   {
+		   System.out.println("\tFull Path Unit Test 2 not run due to preliminary validation bugs detected \n");
+	   }
+
+	   // If we ran both unit test versions, we can run the comparison
+	   if(ran1 && ran2)
+	   {
+		   System.out.println("\tComparison of Path options test results in output 'ComparePathSettingsTest.txt'\n\n");
+		   teststruct.printCompareTestStructArraysToFile(TestArr, TestArr2, setting1, setting2, "ComparePathSettingsTest.txt", "Compare Path Settings Test");
+	   } 
    }
    
 

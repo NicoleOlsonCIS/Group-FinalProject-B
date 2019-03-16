@@ -120,7 +120,7 @@ public class teststruct
 			
 			System.out.print(i + 1);
 			System.out.print(": TESTING: ");
-			System.out.println(arr1[i].url + "\n");
+			System.out.println(arr1[i].url + "\n\n");
 			
 			if(arr1Crash == true)
 			{
@@ -376,6 +376,7 @@ public class teststruct
 			boolean arr1Crash = arr1[i].crash;
 			boolean arr2Crash = arr2[i].crash;
 			
+			v.add("\n");
 			v.add(toString(i+1) + ": TESTING: " + arr1[i].url + "\n\n");
 			
 			if(arr1Crash == true)
