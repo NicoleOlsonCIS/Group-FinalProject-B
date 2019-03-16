@@ -18,7 +18,7 @@ public class UrlValidatorTest extends TestCase
    }
 
    
-   // TO DO: Replace with 
+   // TO DO: Replace with broader test (see shared document)
    public void testManualTest()
    {
 	   
@@ -812,8 +812,7 @@ public class UrlValidatorTest extends TestCase
 	   
 	   
 	   // PART 2: No double slash, fragments allowed (default constructor)
-	   long options2 =
-	            UrlValidator.ALLOW_ALL_SCHEMES;
+	   long options2 = UrlValidator.ALLOW_ALL_SCHEMES;
 
 	   check1 = false;
 	   check2 = false;
@@ -859,7 +858,7 @@ public class UrlValidatorTest extends TestCase
 			   {	   
 					   new ResultPair("http://www.google.com" + "", true),   							// [0] with null path
 					   new ResultPair("http://www.google.com" + "/", true),								// [1] with trailing / 
-					   new ResultPair("index.html", true),									// [2] with null authority no // for path
+					   new ResultPair("index.html", true),												// [2] with null authority no // for path
 					   new ResultPair("http://www.google.com" + "/index.html", true),         			// [3] Valid for both 
 					   new ResultPair("http://www.google.com" + "/word/index.html", true),    			// [4] Valid for both       							
 					   new ResultPair("http://www.google.com" + "/word//index.html", false),   			// [5] allow two slashes (False in part 2 only) 	
@@ -920,6 +919,16 @@ public class UrlValidatorTest extends TestCase
 	   } 
    }
    
+   
+   // TO DO
+   public void testQuery()
+   {
+	   System.out.println();
+	   System.out.println("UNIT TEST: Testing query evaluation of isValid()");
+	   
+	   
+	   	   
+   }
 
    public void testRandomPorts()
    {
@@ -964,9 +973,7 @@ public class UrlValidatorTest extends TestCase
 		   ArrInValid[i] = randomNum;
 	   }
 	   
-	   // using ftp to get to isValidAuthority call (not called with http)
-	   // furthermore anything with ":" and http returns false
-	   String prePort = "ftp://www.google.com:";
+	   String prePort = "http://www.google.com:";
 	   String auth = "www.google.com:";
 	   String postPort = "/test1";
 	   
@@ -1010,7 +1017,7 @@ public class UrlValidatorTest extends TestCase
 	   // count up Pass, Fail, Exceptions
 	   int numTrue = 0;
 	   int numFalse = 0; 
-	   int numExceptions = 0; 
+	   int numExceptions1 = 0; 
 	   
 	   for(int k = 0; k < 2000; k++)
 	   {
@@ -1019,7 +1026,7 @@ public class UrlValidatorTest extends TestCase
 		   else if(resultArr[k] == "false")
 			   numFalse++;
 		   else if(resultArr[k] == "Exception Thrown")
-			   numExceptions++;
+			   numExceptions1++;
 	   }
 	   
 	   // print summary from random valid port call to isValidAuthoirty
@@ -1027,7 +1034,7 @@ public class UrlValidatorTest extends TestCase
 	   System.out.println("\tSummary of results for random valid ports called to isValidAuthoirty(): \n");
 	   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
 	   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
-	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions1 + "\n\n");
 	   
 	   
 	   // REPEAT WITH INVALID PORTS
@@ -1071,7 +1078,7 @@ public class UrlValidatorTest extends TestCase
 	   // count up Pass, Fail, Exceptions
 	   numTrue = 0;
 	   numFalse = 0; 
-	   numExceptions = 0; 
+	   int numExceptions2 = 0; 
 	   
 	   for(int k = 0; k < 2000; k++)
 	   {
@@ -1080,7 +1087,7 @@ public class UrlValidatorTest extends TestCase
 		   else if(resultArr2[k] == "false")
 			   numFalse++;
 		   else if(resultArr2[k] == "Exception Thrown")
-			   numExceptions++;
+			   numExceptions2++;
 	   }
 	   
 	   // print summary from random valid port call to isValidAuthoirty
@@ -1088,58 +1095,88 @@ public class UrlValidatorTest extends TestCase
 	   System.out.println("\tSummary of results for random INVALID ports called to isValidAuthoirty(): \n");
 	   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
 	   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
-	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions + "\n\n");
+	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions2 + "\n\n");
 	   
-	   // NOW CALL isValid() with the same ports (starting with valid ports)
-	   for (int j = 0; j < 2000; j++)
+	   
+	   // if everything crashed on direct calls to isValidAuthority()
+	   if(numExceptions1 == 2000)
 	   {
-		   try
-		   {
-			   result = urlValRandPorts.isValid(TestArr[j].url);
-			   TestArr[j].crash = false;
-			   TestArr[j].isValidReturn = result; 
-			   if(TestArr[j].expect == TestArr[j].isValidReturn)
-				   TestArr[j].pass = true;
-			   else
-				   TestArr[j].pass = false;
-				   
-		   }
-		   catch (Throwable t)
-		   {
-			   TestArr[j].crash = true;
-		   }
-
+		   System.out.println();
+		   System.out.println("\t 100% crash rate on valid ports in isValidAuthoirty() calls, no further testing with isValid() \n");
 	   }
-	   // NOW CALL isValid() with the invalid ports
-	   for (int j = 0; j < 2000; j++)
+	   else
 	   {
-		   try
+		   System.out.println();
+		   System.out.println("\t Now calling isValid() with valid ports . . . \n");
+		   // NOW CALL isValid() with the same ports (starting with valid ports)
+		   for (int j = 0; j < 2000; j++)
 		   {
-			   result = urlValRandPorts.isValid(TestArr2[j].url);
-			   TestArr2[j].crash = false;
-			   TestArr2[j].isValidReturn = result; 
-			   if(TestArr2[j].expect == TestArr2[j].isValidReturn)
-				   TestArr2[j].pass = true;
-			   else
-				   TestArr2[j].pass = false;
-				   
-		   }
-		   catch (Throwable t)
-		   {
-			   TestArr2[j].crash = true;
-		   }
+			   try
+			   {
+				   result = urlValRandPorts.isValid(TestArr[j].url);
+				   TestArr[j].crash = false;
+				   TestArr[j].isValidReturn = result; 
+				   if(TestArr[j].expect == TestArr[j].isValidReturn)
+					   TestArr[j].pass = true;
+				   else
+					   TestArr[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr[j].crash = true;
+			   }
 
+		   }
+		  
+		   // print results to file
+		   System.out.println("\tRANDOM TESTING OF VALID PORTS COMPLETE  \n");
+		   System.out.println("\tSee full results in 'Random_Testing_Valid_Ports.txt'\n\n");
+		   teststruct.printResultsToFile(TestArr, "Random_Testing_Valid_Ports.txt", "Random Testing of Valid Ports");   
+		   
 	   }
 	   
-	   // compare the results to elucidate contextual influences
-	   String s1 = "valid port";
-	   String s2 = "invalid port";
 	   
-	   // Prints all 2000 results compared
-	   System.out.println("\tSee output file 'Random_Testing_Ports_Comparative.txt' for ");
-	   System.out.println("\tcomparative analysis between valid and invalid port calls\n");
-	   String testName = "Comparing Valid and InValid Port Test Results";
-	   teststruct.printCompareTestStructArraysToFile(TestArr, TestArr2, s1, s2, "Random_Testing_Ports_Comparative.txt", testName);
+	   // Do the same for invalid ports
+	   
+	   // if everything crashed on direct calls to isValidAuthority()
+	   if(numExceptions2 == 2000)
+	   {
+		   System.out.println();
+		   System.out.println("\t 100% crash rate on valid ports in isValidAuthoirty() calls, no further testing with isValid() \n");
+	   }
+	   
+	   else
+	   {
+		   
+		   System.out.println();
+		   System.out.println("\t Now calling isValid() with invalid ports . . . \n");
+		   // call isValid() with the INVALID ports
+		   for (int j = 0; j < 2000; j++)
+		   {
+			   try
+			   {
+				   result = urlValRandPorts.isValid(TestArr2[j].url);
+				   TestArr2[j].crash = false;
+				   TestArr2[j].isValidReturn = result; 
+				   if(TestArr2[j].expect == TestArr2[j].isValidReturn)
+					   TestArr2[j].pass = true;
+				   else
+					   TestArr2[j].pass = false;
+					   
+			   }
+			   catch (Throwable t)
+			   {
+				   TestArr2[j].crash = true;
+			   }
+
+		   }
+		   
+		   // print results to file
+		   System.out.println("\tRANDOM TESTING OF INVALID PORTS COMPLETE  \n");
+		   System.out.println("\tSee full results in 'Random_Testing_Invalid_Ports.txt'\n\n");
+		   teststruct.printResultsToFile(TestArr, "Random_Testing_Invalid_Ports.txt", "Random Testing of Invalid Ports");   
+	   }
 	   
 	   
    }
@@ -1294,6 +1331,7 @@ public class UrlValidatorTest extends TestCase
 		  String ipv6;
 		  count = 0; 
 		  String validIPV6[] = new String[1000];
+		  String validIPV6_nobrackets[] = new String[1000];
 		  
 		  for(int i = 0; i < 32000; i+=32)
 		  {
@@ -1442,17 +1480,21 @@ public class UrlValidatorTest extends TestCase
 			  q8 = qq + rr + ss + tt;
 			  
 			  
+			  String ipv6_no_bracket;
 			  // if count divisible by 13, add extra ":" instead of a chars
 			  if(count % 5 == 0)
 			  {
 				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + "::" + "]";
+				  ipv6_no_bracket =  q1 + ":" + q2 + ":" + q3 + ":" + q4 + "::";
 			  }
 			  else
 			  {
 				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + ":" + q5 + ":" + q6 + ":" + q7 + ":" + q8 + "]";
+				  ipv6_no_bracket = q1 + ":" + q2 + ":" + q3 + ":" + q4 + ":" + q5 + ":" + q6 + ":" + q7 + ":" + q8;
 			  }
 			  
 			  validIPV6[count] = ipv6;
+			  validIPV6_nobrackets[count] = ipv6_no_bracket;
 			  // for debugging
 			  // System.out.println(ipv6);
 			  count ++;
@@ -1487,6 +1529,7 @@ public class UrlValidatorTest extends TestCase
 		  
 		  count = 0; 
 		  String invalidIPV6[] = new String[1000];
+		  String invalidIPV6_no_brackets[] = new String[1000];
 		  
 		  for(int i = 0; i < 32000; i+=32)
 		  {
@@ -1634,18 +1677,21 @@ public class UrlValidatorTest extends TestCase
 			  
 			  q8 = qq + rr + ss + tt;
 			  
-			  
-			  // if count divisible by 13, add extra ":" instead of a chars
+			  String ipv6_no_bracket;
+			  // if count divisible by 7, add extra ":" instead of a chars
 			  if(count % 7 == 0)
 			  {
 				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + "::" + "]";
+				  ipv6_no_bracket =  q1 + ":" + q2 + ":" + q3 + ":" + q4 + "::";
 			  }
 			  else
 			  {
 				  ipv6 = "[" + q1 + ":" + q2 + ":" + q3 + ":" + q4 + ":" + q5 + ":" + q6 + ":" + q7 + ":" + q8 + "]";
+				  ipv6_no_bracket = q1 + ":" + q2 + ":" + q3 + ":" + q4 + ":" + q5 + ":" + q6 + ":" + q7 + ":" + q8;
 			  }
 			  
 			  invalidIPV6[count] = ipv6;
+			  invalidIPV6_no_brackets[count] = ipv6_no_bracket;
 			  // for debugging
 			  // System.out.println(ipv6);
 			  count ++;
@@ -1710,7 +1756,7 @@ public class UrlValidatorTest extends TestCase
 			   {
 				   	try
 			   		{
-				   		boolean result = iNet.isValidInet6Address(validIPV6[j]);
+				   		boolean result = iNet.isValidInet6Address(validIPV6_nobrackets[j]);
 					    if(result)
 						    resultArr3[j] = "true";
 					    else
@@ -1727,7 +1773,7 @@ public class UrlValidatorTest extends TestCase
 			   {
 				   	try
 			   		{
-				   		boolean result = iNet.isValidInet6Address(invalidIPV6[j]);
+				   		boolean result = iNet.isValidInet6Address(invalidIPV6_no_brackets[j]);
 					    if(result)
 						    resultArr4[j] = "true";
 					    else
@@ -1757,7 +1803,7 @@ public class UrlValidatorTest extends TestCase
 					   numExceptions++;
 			   }
 			   
-			   // print summary from random valid ipv4 call to isValidAuthoirty
+			   // print summary from random valid ipv4 call to isValidInet
 			   System.out.println();
 			   System.out.println("\tSummary of results for random VALID ipv4 called to isValidInet4Addres(): \n");
 			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
@@ -1777,7 +1823,7 @@ public class UrlValidatorTest extends TestCase
 				   else if(resultArr2[k] == "Exception Thrown")
 					   numExceptions++;
 			   }
-			   // print summary from random invalid ipv4 call to isValidAuthoirty
+			   // print summary from random invalid ipv4 call to isValidInet
 			   System.out.println();
 			   System.out.println("\tSummary of results for random INVALID ipv4 called to isValidInet4Addres(): \n");
 			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
@@ -1797,7 +1843,7 @@ public class UrlValidatorTest extends TestCase
 				   else if(resultArr3[k] == "Exception Thrown")
 					   numExceptions++;
 			   }
-			   // print summary from random invalid ipv4 call to isValidAuthoirty
+			   // print summary from random invalid ipv4 call to isValidInet
 			   System.out.println();
 			   System.out.println("\tSummary of results for random VALID ipv6 called to isValidInet6Addres(): \n");
 			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
@@ -1817,8 +1863,7 @@ public class UrlValidatorTest extends TestCase
 				   else if(resultArr4[k] == "Exception Thrown")
 					   numExceptions++;
 			   }
-			   // print summary from random invalid ipv4 call to isValidAuthoirty
-			   System.out.println();
+			   // print summary from random invalid ipv4 call to isValidInet
 			   System.out.println("\tSummary of results for random INVALID ipv6 called to isValidInet6Addres(): \n");
 			   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
 			   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
@@ -1985,39 +2030,5 @@ public class UrlValidatorTest extends TestCase
 		   teststruct.printCompareTestStructArraysToFile(TestArr3, TestArr4, s3, s4, "Random_Testing_IPV6_Comparative.txt", testName);
 		   
    }
-   
-   
-   /* TO DO:
-   public void testQuery()
-   {
-	   //System.out.println();
-	   //System.out.println("UNIT TEST: Testing query evaluation of isValid()"); 
-	   
-   }
-
-   */
-   
-   public void testYourFirstPartition()
-   {
-	 //You can use this function to implement your First Partition testing	   
-
-   }
-   
-   public void testYourSecondPartition()
-   {
-		 //You can use this function to implement your Second Partition testing	   
-
-   }
-   //You need to create more test cases for your Partitions if you need to 
   
-   public void testIsValid()
-   {
-	   //You can use this function for programming based testing
-	   
-	   // ?
-
-   }
-   
-
-
 }
