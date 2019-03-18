@@ -1,0 +1,64 @@
+Printing test outcomes for SchemeTest2
+(Scroll to bottom for Pass/Fail/Crash totals)
+
+
+1: TESTING: http://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+2: TESTING: ftp://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+3: TESTING: https://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+4: TESTING: xTtp://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+5: TESTING: h-fp://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+6: TESTING: httpppp://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+7: TESTING: h://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+8: TESTING: :ttp://www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+9: TESTING: h*tp://www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+10: TESTING: Xttp:/www.google.com
+Expecting: false, isValid() Return: true
+Summary: FAIL
+11: TESTING: h_tp:www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+12: TESTING: /www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+13: TESTING: ://www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+14: TESTING: 3ht://www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+15: TESTING: http:/www.google.com
+Expecting: false, isValid() Return: true
+Summary: FAIL
+16: TESTING: http:www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+17: TESTING: http/www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+18: TESTING: ://www.google.com
+Expecting: false, isValid() Return: false
+Summary: PASS
+
+
+SUMMARY: 
+	 Pass:  9
+	 Fail: 9
+	 Crash: 0

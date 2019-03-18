@@ -1,0 +1,43 @@
+Printing test outcomes for PathTest2
+(Scroll to bottom for Pass/Fail/Crash totals)
+
+
+1: TESTING: http://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+2: TESTING: http://www.google.com/
+Expecting: true, isValid() Return: false
+Summary: FAIL
+3: TESTING: index.html
+Expecting: true, isValid() Return: false
+Summary: FAIL
+4: TESTING: http://www.google.com/index.html
+Expecting: true, isValid() Return: false
+Summary: FAIL
+5: TESTING: http://www.google.com/word/index.html
+Expecting: true, isValid() Return: false
+Summary: FAIL
+6: TESTING: http://www.google.com/word//index.html
+Expecting: true, isValid() Return: false
+Summary: FAIL
+7: TESTING: http://www.google.com/index.html#fragment
+Expecting: false, isValid() Return: false
+Summary: PASS
+8: TESTING: http://www.google.com/word//index.html#fragment
+Expecting: false, isValid() Return: false
+Summary: PASS
+9: TESTING: http://www.google.com/../
+Expecting: false, isValid() Return: false
+Summary: PASS
+10: TESTING: http://www.google.com/../index.html
+Expecting: false, isValid() Return: false
+Summary: PASS
+11: TESTING: http://www.google.com/#/index.html
+Expecting: false, isValid() Return: false
+Summary: PASS
+
+
+SUMMARY: 
+	 Pass:  5
+	 Fail: 6
+	 Crash: 0
