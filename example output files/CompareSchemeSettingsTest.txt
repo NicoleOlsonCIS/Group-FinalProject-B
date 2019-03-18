@@ -1,0 +1,127 @@
+Printing Comparative Testing for Compare Scheme Settings Test
+
+
+Comparing results based on comparison between: 
+OPTION 1: Only: http/https/ftp
+OPTION 2: All schemes allowed
+
+
+1: TESTING: http://www.google.com
+
+Only: http/https/ftp: Expected Valid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+2: TESTING: ftp://www.google.com
+
+Only: http/https/ftp: Expected Valid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+3: TESTING: https://www.google.com
+
+Only: http/https/ftp: Expected Valid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+4: TESTING: xTtp://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected invalid-valid but got valid-invalid.
+
+
+5: TESTING: h-fp://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected invalid-valid but got valid-invalid.
+
+
+6: TESTING: httpppp://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected invalid-valid but got valid-invalid.
+
+
+7: TESTING: h://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Valid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected invalid-valid but got valid-invalid.
+
+
+8: TESTING: :ttp://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: :ttp://www.google.com
+
+9: TESTING: h*tp://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: h*tp://www.google.com
+
+10: TESTING: Xttp:/www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Valid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+
+11: TESTING: h_tp:www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: h_tp:www.google.com
+
+12: TESTING: /www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: /www.google.com
+
+13: TESTING: ://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: ://www.google.com
+
+14: TESTING: 3ht://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: 3ht://www.google.com
+
+15: TESTING: http:/www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Valid
+All schemes allowed: Expected Invalid  Result: Valid
+INDEPENDENT INVERSION DETECTED: Expected both invalid but both returned valid.
+
+
+16: TESTING: http:www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: http:www.google.com
+
+17: TESTING: http/www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: http/www.google.com
+
+18: TESTING: ://www.google.com
+
+Only: http/https/ftp: Expected Invalid  Result: Invalid
+All schemes allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: ://www.google.com

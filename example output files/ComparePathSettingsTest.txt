@@ -1,0 +1,83 @@
+Printing Comparative Testing for Compare Path Settings Test
+
+
+Comparing results based on comparison between: 
+OPTION 1: Double Slashes-No Fragments
+OPTION 2: Single Slash Only - Fragments Allowed
+
+
+1: TESTING: http://www.google.com
+
+Double Slashes-No Fragments: Expected Valid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+2: TESTING: http://www.google.com/
+
+Double Slashes-No Fragments: Expected Valid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+3: TESTING: index.html
+
+Double Slashes-No Fragments: Expected Valid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+4: TESTING: http://www.google.com/index.html
+
+Double Slashes-No Fragments: Expected Valid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+5: TESTING: http://www.google.com/word/index.html
+
+Double Slashes-No Fragments: Expected Valid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+INDEPENDENT INVERSION DETECTED: Expected both valid but both returned invalid.
+
+
+6: TESTING: http://www.google.com/word//index.html
+
+Double Slashes-No Fragments: Expected Valid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Invalid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected valid-invalid but got invalid-valid.
+
+7: TESTING: http://www.google.com/index.html#fragment
+
+Double Slashes-No Fragments: Expected Invalid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected invalid-valid but got valid-invalid.
+
+
+8: TESTING: http://www.google.com/word//index.html#fragment
+
+Double Slashes-No Fragments: Expected Invalid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: http://www.google.com/word//index.html#fragment
+
+9: TESTING: http://www.google.com/../
+
+Double Slashes-No Fragments: Expected Invalid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: http://www.google.com/../
+
+10: TESTING: http://www.google.com/../index.html
+
+Double Slashes-No Fragments: Expected Invalid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Invalid  Result: Invalid
+PASS ON BOTH SETTINGS for: http://www.google.com/../index.html
+
+11: TESTING: http://www.google.com/#/index.html
+
+Double Slashes-No Fragments: Expected Invalid  Result: Invalid
+Single Slash Only - Fragments Allowed: Expected Valid  Result: Invalid
+DEPENDENCY DETECTED: Fails on only 1 setting 
+DEPENDENT INVERSION DETECTED: Expected invalid-valid but got valid-invalid.
+

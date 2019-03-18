@@ -1,0 +1,94 @@
+Printing test outcomes for IsValid() Calls Testing Authority NO-IANA
+(Scroll to bottom for Pass/Fail/Crash totals)
+
+
+1: TESTING: http://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+2: TESTING: https://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+3: TESTING: ftp://www.google.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+4: TESTING: http://amazon.com.au
+Expecting: true, isValid() Return: false
+Summary: FAIL
+5: TESTING: http://0.0.0.0
+Expecting: true, isValid() Return: false
+Summary: FAIL
+6: TESTING: http://255.255.255.255
+Expecting: true, isValid() Return: false
+Summary: FAIL
+7: TESTING: http://172.com
+Expecting: true, isValid() Return: false
+Summary: FAIL
+8: TESTING: http://youtube.cc
+Expecting: true, isValid() Return: true
+Summary: PASS
+9: TESTING: http://255.255.255.255:81/path
+Expecting: true, isValid() Return: false
+Summary: FAIL
+10: TESTING: http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]/path
+Expecting: true, isValid() Return: false
+Summary: FAIL
+11: TESTING: http://[1080:0:0:0:8:800:200C:417A]/path
+Expecting: true, isValid() Return: false
+Summary: FAIL
+12: TESTING: http://[3ffe:2a00:100:7031::1]/path
+Expecting: true, isValid() Return: false
+Summary: FAIL
+13: TESTING: http://[1080::8:800:200C:417A]/path
+Expecting: true, isValid() Return: false
+Summary: FAIL
+14: TESTING: http://[2010:836B:4179::836B:4179]/path
+Expecting: true, isValid() Return: false
+Summary: FAIL
+15: TESTING: http://path
+Expecting: true, isValid() Return: true
+Summary: PASS
+16: TESTING: http://user:password@host:81
+Expecting: true, isValid() Return: true
+Summary: PASS
+17: TESTING: http://amazon.com.xx1
+Expecting: false, isValid() Return: true
+Summary: FAIL
+18: TESTING: http://172.ccc
+Expecting: false, isValid() Return: true
+Summary: FAIL
+19: TESTING: http://youtube.czq
+Expecting: false, isValid() Return: true
+Summary: FAIL
+20: TESTING: http://172.192.172.256/path
+Expecting: false, isValid() Return: true
+Summary: FAIL
+21: TESTING: http://10.11.12.13.14/path
+Expecting: false, isValid() Return: true
+Summary: FAIL
+22: TESTING: http://1.2.3.4///
+Expecting: false, isValid() Return: false
+Summary: PASS
+23: TESTING: http://.1.2.3.4
+Expecting: false, isValid() Return: true
+Summary: FAIL
+24: TESTING: http://go.a
+Expecting: false, isValid() Return: true
+Summary: FAIL
+25: TESTING: http://go.1aa
+Expecting: false, isValid() Return: true
+Summary: FAIL
+26: TESTING: http://.aaa
+Expecting: false, isValid() Return: true
+Summary: FAIL
+27: TESTING: http://aaa.
+Expecting: false, isValid() Return: true
+Summary: FAIL
+28: TESTING: file://:
+Expecting: false, isValid() Return: false
+Summary: PASS
+
+
+SUMMARY: 
+	 Pass:  5
+	 Fail: 23
+	 Crash: 0
