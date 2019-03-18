@@ -3,11 +3,6 @@
 import junit.framework.TestCase;
 import java.util.concurrent.ThreadLocalRandom;
 
-//You can use this as a skeleton for your 3 different test approach
-//It is an optional to use this file, you can generate your own test file(s) to test the target function!
-// Again, it is up to you to use this file or not!
-
-
 public class UrlValidatorTest extends TestCase 
 {
 
@@ -244,7 +239,6 @@ public class UrlValidatorTest extends TestCase
 	   }
 	   
 	   // TEST 2: TESTING "ALLOW_ALL_SCHEMES"
-	   // TEST 1: DEFAULT SCHEMES
 	   System.out.println();
 	   System.out.println("UNIT TEST: Testing isValidScheme() on ALLOW_ALL_SCHEMES");
 	   long options =
@@ -322,11 +316,6 @@ public class UrlValidatorTest extends TestCase
 		   
 		   System.out.println("\tUnit test calls to isValid() for ALLOW_ALL_SCHEMES . . . \n");
 		   
-		   // for debugging
-		   // System.out.println();
-		   // System.out.println("\tCross references of scheme validity in context:");
-		   // System.out.println("\tTesting ALLOW_ALL_SCHEME validity in context of isValid() call: \n\n");
-		   
 		   test2Run = true;
 		   try 
 		   {
@@ -338,22 +327,6 @@ public class UrlValidatorTest extends TestCase
 			   return; 
 		   }
 		   
-		   
-		   // From: https://tools.ietf.org/html/rfc3986#section-3.1
-		   //
-		   // Scheme names consist of a sequence of characters beginning with a
-		   // letter and followed by any combination of letters, digits, plus
-		   // ("+"), period ("."), or hyphen ("-").  Although schemes are case-
-		   // insensitive, the canonical form is lowercase and documents that
-		   // specify schemes must do so with lowercase letters.  An implementation
-		   // should accept uppercase letters as equivalent to lowercase in scheme
-		   // names (e.g., allow "HTTP" as well as "http") for the sake of
-		   // robustness but should only produce lowercase scheme names for
-		   // consistency.
-		   
-		   
-		   // create urls with invalid valid and invalid scheme while holding the rest constant
-		   // ALLOW_ALL_SCHEMES requires that urls be properly formatted, see formatting requirements above
 		   ResultPair[] testingScheme2 =  
 			   {	   
 					   new ResultPair("http://" + "www.google.com", true),
@@ -438,34 +411,6 @@ public class UrlValidatorTest extends TestCase
    }
    public void testAuthority()
    {
-	   // Explaining test url evaluations in terms of valid/invalid 
-	   // Authority validity defined by: https://en.wikipedia.org/wiki/URL
-	   //
-	   // Authority component is after scheme and before path
-	   //           URI = scheme:[//authority]path[?query][#fragment]
-	   //           Where: authority = [userinfo@]host[:port]
-	   //
-	   // Authority component is OPTIONAL (urls without authority can be valid)
-	   //
-	   //
-	   //
-	   // "An OPTIONAL authority component preceded by two slashes (//), comprising:
-	   // 
-	   // An optional userinfo subcomponent that may consist of a 
-	   //    user name and an optional password preceded by a colon (:), 
-	   //    followed by an at symbol (@). Use of the format username:password 
-	   //    in the userinfo subcomponent is deprecated for security reasons. 
-	   //    Applications should not render as clear text any data after the first colon (:) 
-	   //    found within a userinfo subcomponent unless the data after the colon is
-	   //    the empty string (indicating no password).
-	   // 
-	   // An optional host subcomponent, consisting of either
-	   //    a registered name (including but not limited to a hostname), 
-	   //    or an IP address. IPv4 addresses must be in dot-decimal notation, 
-	   //    and IPv6 addresses must be enclosed in brackets ([]).[16][c]
-	   // 
-	   // An optional port subcomponent preceded by a colon (:).
-
 	   System.out.println("UNIT TEST: Testing isValidAuthority() directly (not calling isValid() )"); 
 	   
 	   // TEST 1: TESTING DEFAULT SETTINGS with IANA
@@ -522,7 +467,6 @@ public class UrlValidatorTest extends TestCase
 		   System.out.println("\t\tCATCH: null input returned invalid\n\n");
 	   }
 	  
-	   
 	   // call !isValidAuthority(authority) on valid authorities:
 	   System.out.println("\tTesting isValidAuthority on valid authority strings (failures printed): \n\n");
 	   int count1 = 0;
@@ -571,7 +515,6 @@ public class UrlValidatorTest extends TestCase
 	   
 	   
 	   // Attempt to test IPV4 and IPV6 addresses directly
-	   
 	   System.out.println();
 	   System.out.println("\tAttempting to create InetAddressValidator.getInstance(): \n");
 	   try
@@ -605,9 +548,9 @@ public class UrlValidatorTest extends TestCase
 				   new ResultPair("http://" + "[1080:0:0:0:8:800:200C:417A]/path", true),            	
 				   new ResultPair("http://" + "[3ffe:2a00:100:7031::1]/path", true),         			
 				   new ResultPair("http://" + "[1080::8:800:200C:417A]/path", true),            	       
-				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]/path", true),       // ** investigate why leading "::" fail          
-				   new ResultPair("http://" + "path", true),                  					// *** investigate why false 
-				   new ResultPair("http://" + "user:password@host:81", true), 					// *** investigate why false
+				   new ResultPair("http://" + "[2010:836B:4179::836B:4179]/path", true),                 
+				   new ResultPair("http://" + "path", true),                  				 
+				   new ResultPair("http://" + "user:password@host:81", true), 					
 				   new ResultPair("http://" + "amazon.com.xx1", false),    							
 				   new ResultPair("http://" + "172.ccc", false),   	     							
 				   new ResultPair("http://" + "youtube.czq", false), 
@@ -671,19 +614,7 @@ public class UrlValidatorTest extends TestCase
    
   
    public void testPath()
-   {
-	   // "A path. The path identifies the specific 
-	   // resource in the host that the web client wants to access. 
-	   // For example, /software/htp/cics/index.html."
-	   // https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.1.0/com.ibm.cics.ts.internet.doc/topics/dfhtl_uricomp.html
-	   //"When authority is present, the path must
-	   //either be empty or begin with a slash ("/") character.  When
-	   //authority is not present, the path cannot begin with two slash
-	   //characters ("//")." 
-	   
-	   //System.out.println();
-	   //System.out.println("UNIT TEST: Testing isValidPath() call in isValid()"); 
-	   
+   {	   
 	   String setting1 = "Double Slashes-No Fragments"; 
 	   String setting2 = "Single Slash Only - Fragments Allowed";
 	   boolean check1 = false;
@@ -918,7 +849,6 @@ public class UrlValidatorTest extends TestCase
    }
    
    
-   // TO DO
    public void testQuery()
    {
 	   System.out.println();
@@ -967,7 +897,6 @@ public class UrlValidatorTest extends TestCase
        System.out.println("QueryTests Passed");          
    }
 	   
-
    public void testRandomPorts()
    {
 	   System.out.println("TESTING RANDOM PORTS \n\n");
@@ -1735,12 +1664,6 @@ public class UrlValidatorTest extends TestCase
 			  count ++;
 		  }
 		  
-		  // CREATED AT THIS POINT
-	      // 1 array of valid 1pv4 size 2000 validIPV4
-		  // 1 array of invalid 1pv4 size 2000 invalidIPV4
-		  // 1 array valid ipv6 size 1000 validIPV6
-		  // 1 array invalid ipv6 size 1000 invalidIPV6
-		  
 		  // Attempt to test IPV4 and IPV6 addresses directly
 		   
 		   System.out.println();
@@ -2029,7 +1952,6 @@ public class UrlValidatorTest extends TestCase
 		   
 		   
 		   // Print results to file
-		   
 		   
 		   //teststruct.printResults(TestArr1);
 		   System.out.println("\tSee full results in 'Random_Test_Valid_IPV4.txt'");
