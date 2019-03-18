@@ -77,7 +77,7 @@ public class UrlValidator implements Serializable {
 
     private static final long serialVersionUID = 7557161713937335013L;
 
-    private static final int MAX_UNSIGNED_16_BIT_INT = 0xFFFF; // port max
+    private static final int MAX_UNSIGNED_16_BIT_INT = 0x320; // port max // BUG ADD 
 
     /**
      * Allows all validly formatted schemes to pass validation instead of
@@ -320,7 +320,7 @@ public class UrlValidator implements Serializable {
             // drop through to continue validation
         } else { // not file:
             // Validate the authority
-            if (!isValidAuthority(authority)) {
+            if (isValidAuthority(authority)) {
                 return false;
             }
         }

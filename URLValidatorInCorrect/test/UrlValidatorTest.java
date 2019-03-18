@@ -18,27 +18,24 @@ public class UrlValidatorTest extends TestCase
    }
 
    
-   // TO DO: Replace with broader test (see shared document)
    public void testManualTest()
    {
 	   
-	   // Very basic manual test that I did just to get going
-	   
-	  /* System.out.println();
-	   System.out.println("MANUAL TEST: Call 12 urls of known validity\n");
-	   // create a UrlValidator object and define "options"
+	   System.out.println();
+	   System.out.println("MANUAL TEST: Call 15 urls of known validity\n");
+	  
 	   long options =
 	            UrlValidator.ALLOW_2_SLASHES
 	                + UrlValidator.ALLOW_ALL_SCHEMES
 	                + UrlValidator.NO_FRAGMENTS;
 	   UrlValidator urlVal = new UrlValidator(options);
 	   
-	   // specifically choose the 12 URLS that we had in Final Project Part A: 
 	   String valid1 = "http://255.255.255.255:80/test1/file?action=view";
 	   String valid2 = "http://www.google.com:80";
-	   String valid3 = "ftp://go.cc:65535";
-	   String valid4 = "ftp://0.0.0.0:65535/t123?action=edit&mode=up";
-	   String invalid1 = "://.1.2.3.4:65a";
+	   String valid3 = "f1p://go.cc:65535";
+	   String valid4 = "fpp://0.0.0.0:65535/t123?action=edit&mode=up";
+	   String valid5 = "HTTP://WWW.GOOGLE.COM";
+	   String invalid1 = "t://.1.2.3.4:65a";
 	   String invalid2 = "http/go.1aa:-1";
 	   String invalid3 = "3ht://aaa:65636";
 	   String invalid4 = "3ht://go.com:80/test1?action=view";
@@ -46,23 +43,27 @@ public class UrlValidatorTest extends TestCase
 	   String invalid6 = "ftp://255.255.255.255:65a/test1/?action=view";
 	   String invalid7 = "h3t://255.com:0/..?action=edit&mode=up";
 	   String invalid8 = "://1.2.3:-1/../";
+	   String invalid9 = ""; 
+	   String invalid10 = "ftp://0.*hj.0.0";
 	   
-	   String urls[] = {valid1, valid2, valid3, valid4, invalid1, invalid2, invalid3, invalid4, invalid5, invalid6, invalid7, invalid8};
+	   String urls[] = {valid1, valid2, valid3, valid4, valid5, 
+			   invalid1, invalid2, invalid3, invalid4, invalid5,
+			   invalid6, invalid7, invalid8, invalid9, invalid10};
 	   
-	   teststruct TestArr[] = new teststruct[12]; 
+	   teststruct TestArr[] = new teststruct[15]; 
 	   
-	   for (int i = 0; i < 12; i++)
+	   for (int i = 0; i < 15; i++)
 	   {
 		   TestArr[i] = new teststruct();
 		   TestArr[i].url = urls[i];
-		   if(i > 3)
+		   if(i > 4)
 			   TestArr[i].expect = false; 
 		   else
 			   TestArr[i].expect = true; 
 	   }
 	   
 	   boolean result;
-	   for (int j = 0; j < 12; j++)
+	   for (int j = 0; j < 15; j++)
 	   {
 		   try
 		   {
@@ -82,11 +83,8 @@ public class UrlValidatorTest extends TestCase
 
 	   }
 	   
-	   System.out.print("Hello "); 
-	   System.out.println("world");
-	   
 	   teststruct.printResults(TestArr);
-	   */
+	   System.out.println("\n\n");
    }
 
    public void testScheme()
@@ -924,11 +922,51 @@ public class UrlValidatorTest extends TestCase
    public void testQuery()
    {
 	   System.out.println();
-	   System.out.println("UNIT TEST: Testing query evaluation of isValid()");
-	   
-	   
-	   	   
+       System.out.println("UNIT TEST: Testing query evaluation of isValid()");
+       String tArr[] = 
+           {
+                   "https:\\regexr.com/",
+                   "http:\\example.com/over/there?name=ferret",
+                   "http:\\example.com/path/to/page?name=ferret&color=purple",
+                   "\\foo.html?e0a72cb2a2c7",
+                   "\\bar.html?e0a72cb2a2c7",
+                   "http:\\example.com/?@bar._=???/1:",
+                   "\\S?"
+           };
+       String fArr[] = 
+           {
+                   "",
+                   "172.192.172.256", 
+                   "10.11.12.13.14", 
+                   "1.1.1.1.", 
+                   "1.2.3", 
+                   ".1.2.3.4",
+                   "go.a", 
+                   "go.1aa", 
+                   ".aaa",
+                   "aaa.", 
+                   "aaa"
+           };
+        long options =
+            UrlValidator.ALLOW_ALL_SCHEMES;
+       UrlValidator urlValQuerValidator = new UrlValidator(options);
+       for( int iterator = 0; iterator < tArr.length; iterator++ )
+       {
+           boolean result = urlValQuerValidator.isValidAuthority(tArr[iterator]);
+
+           try{
+            if(urlValQuerValidator.isValidQuery(tArr[iterator])) result = true;
+            if(!urlValQuerValidator.isValidQuery(fArr[iterator])) result = true;
+           }
+           catch (Throwable t)
+           {
+               result = false;
+           }
+       }
+
+       System.out.println("QueryTests Passed");          
    }
+	   
 
    public void testRandomPorts()
    {
@@ -1090,11 +1128,11 @@ public class UrlValidatorTest extends TestCase
 			   numExceptions2++;
 	   }
 	   
-	   // print summary from random valid port call to isValidAuthoirty
+	   // print summary from random invalid port call to isValidAuthoirty
 	   System.out.println();
 	   System.out.println("\tSummary of results for random INVALID ports called to isValidAuthoirty(): \n");
-	   System.out.println("\t\t# return TRUE (PASS): " + numTrue + "\n\n");
-	   System.out.println("\t\t# return FALSE (FAIL): " + numFalse + "\n\n");
+	   System.out.println("\t\t# return TRUE (FAIL): " + numTrue + "\n\n");
+	   System.out.println("\t\t# return FALSE (PASS): " + numFalse + "\n\n");
 	   System.out.println("\t\t# return Exception Thrown (FAIL): " + numExceptions2 + "\n\n");
 	   
 	   
